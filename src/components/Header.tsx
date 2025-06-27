@@ -18,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             </div>
             <div>
               <h1 className="text-xl font-semibold text-foreground">
-                College Finder
+                College Finder by Awej
               </h1>
               <p className="text-xs text-muted-foreground hidden sm:block">Engineering Guidance</p>
             </div>
