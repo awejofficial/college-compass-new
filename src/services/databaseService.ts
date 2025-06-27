@@ -47,7 +47,8 @@ export interface UploadRecord {
 export const fetchCutoffData = async (
   category?: string,
   branch?: string,
-  collegeTypes?: string[]
+  collegeTypes?: string[],
+  cities?: string[]
 ): Promise<CutoffRecord[]> => {
   try {
     let query = supabase
@@ -65,6 +66,10 @@ export const fetchCutoffData = async (
 
     if (collegeTypes && collegeTypes.length > 0) {
       query = query.in('college_type', collegeTypes);
+    }
+
+    if (cities && cities.length > 0) {
+      query = query.in('city', cities);
     }
 
     const { data, error } = await query;
