@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from "@/hooks/use-toast";
 import { 
@@ -25,12 +24,11 @@ const Index = () => {
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [availableBranches, setAvailableBranches] = useState<string[]>([]);
   const [availableCollegeTypes, setAvailableCollegeTypes] = useState<string[]>([]);
-  const [isGuest, setIsGuest] = useState(false);
+  const [isGuest, setIsGuest] = useState(true); // Default to guest mode
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [showSaveDataAlert, setShowSaveDataAlert] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    fullName: '',
+    fullName: 'Guest User',
     aggregate: '',
     category: '',
     preferredBranches: [],
@@ -178,7 +176,7 @@ const Index = () => {
     setShowResults(false);
     setCurrentStep(1);
     setFormData({
-      fullName: '',
+      fullName: 'Guest User',
       aggregate: '',
       category: '',
       preferredBranches: [],
@@ -187,28 +185,18 @@ const Index = () => {
       collegeSelections: [],
       selectedCities: []
     });
-    setIsGuest(false);
+    setIsGuest(true);
     setShowForm(false);
   };
 
   const handleGuestAccess = () => {
     setIsGuest(true);
-    setShowSaveDataAlert(false);
     setFormData({ ...formData, fullName: 'Guest User' });
-  };
-
-  const handleEmailLogin = () => {
-    setShowSaveDataAlert(false);
-    window.location.href = '/auth';
-  };
-
-  const handleLoginClick = () => {
-    setShowSaveDataAlert(true);
   };
 
   const handleStartJourney = () => {
     setShowForm(true);
-    setShowSaveDataAlert(true);
+    setIsGuest(true);
   };
 
   const handleCollegeTypeChange = (collegeType: string, checked: boolean) => {
@@ -256,20 +244,20 @@ const Index = () => {
         results={results}
         formData={formData}
         onRefillForm={refillForm}
-        onLoginClick={handleLoginClick}
+        onLoginClick={() => {}} // No-op since login is removed
       />
     );
   }
 
   if (isLoadingOptions) {
-    return <LoadingDisplay onLoginClick={handleLoginClick} />;
+    return <LoadingDisplay onLoginClick={() => {}} />; // No-op since login is removed
   }
 
   if (!showForm) {
     return (
       <HomeDisplay 
         onStartJourney={handleStartJourney}
-        onLoginClick={handleLoginClick}
+        onLoginClick={() => {}} // No-op since login is removed
       />
     );
   }
@@ -279,20 +267,20 @@ const Index = () => {
       currentStep={currentStep}
       isGuest={isGuest}
       isAnalyzing={isAnalyzing}
-      showSaveDataAlert={showSaveDataAlert}
+      showSaveDataAlert={false} // Always false since no login
       formData={formData}
       availableCategories={availableCategories}
       onFormDataChange={handleFormDataChange}
       onGuestAccess={handleGuestAccess}
-      onEmailLogin={handleEmailLogin}
-      onAlertClose={() => setShowSaveDataAlert(false)}
+      onEmailLogin={() => {}} // No-op since login is removed
+      onAlertClose={() => {}} // No-op since no alert
       onNext={handleNext}
       onPrev={handlePrev}
       onSubmit={handleSubmit}
       onBranchChange={handleBranchChange}
       onCollegeTypeChange={handleCollegeTypeChange}
       onCityChange={handleCityChange}
-      onLoginClick={handleLoginClick}
+      onLoginClick={() => {}} // No-op since login is removed
     />
   );
 };

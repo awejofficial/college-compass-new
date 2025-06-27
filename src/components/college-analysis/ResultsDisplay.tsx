@@ -16,18 +16,17 @@ interface ResultsDisplayProps {
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   results,
   formData,
-  onRefillForm,
-  onLoginClick
+  onRefillForm
 }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header onLoginClick={onLoginClick} />
+      <Header />
       <div className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <div className="minimal-card mb-6">
+            <div className="bg-card border border-border rounded-lg p-6 shadow-sm mb-6">
               <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-                <GraduationCap className="h-8 w-8 text-nvidia-green" />
+                <GraduationCap className="h-8 w-8 text-primary" />
                 DSE College Finder 2024
               </h1>
               <div className="text-muted-foreground space-y-1">

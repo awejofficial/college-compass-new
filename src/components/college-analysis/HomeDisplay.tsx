@@ -10,10 +10,10 @@ interface HomeDisplayProps {
   onLoginClick: () => void;
 }
 
-export const HomeDisplay: React.FC<HomeDisplayProps> = ({ onStartJourney, onLoginClick }) => {
+export const HomeDisplay: React.FC<HomeDisplayProps> = ({ onStartJourney }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header onLoginClick={onLoginClick} />
+      <Header />
       <div className="flex-1">
         <HeroSection onStartClick={onStartJourney} />
         <FeatureCards />

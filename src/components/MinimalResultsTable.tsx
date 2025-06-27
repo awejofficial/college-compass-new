@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, Download, Check, X, Filter, Search } from "lucide-react";
+import { RefreshCw, Download, Check, X, Search } from "lucide-react";
 import { PaginationControls } from "@/components/PaginationControls";
+import jsPDF from 'jspdf';
 
 export interface CollegeMatch {
   collegeName: string;
@@ -88,32 +88,62 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
   const endIndex = startIndex + resultsPerPage;
   const currentResults = filteredResults.slice(startIndex, endIndex);
 
-  const exportToCSV = () => {
-    const headers = ['College Name', 'City', 'Branch', 'Category', 'Type', 'CAP1', 'CAP2', 'CAP3', 'Eligible'];
-    const csvContent = [
-      headers.join(','),
-      ...filteredResults.map(college => [
-        `"${college.collegeName}"`,
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    
+    // Set title
+    doc.setFontSize(16);
+    doc.text(`College Results for ${studentName}`, 20, 20);
+    
+    // Add summary
+    doc.setFontSize(12);
+    doc.text(`Total Colleges: ${filteredResults.length}`, 20, 35);
+    doc.text(`Eligible Colleges: ${eligibleCount}`, 20, 45);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 55);
+    
+    // Table headers
+    doc.setFontSize(10);
+    const headers = ['College Name', 'City', 'Branch', 'Type', 'CAP1', 'CAP2', 'CAP3', 'Status'];
+    let yPosition = 70;
+    
+    // Draw headers
+    doc.setFont(undefined, 'bold');
+    headers.forEach((header, index) => {
+      doc.text(header, 20 + (index * 22), yPosition);
+    });
+    
+    // Draw line under headers
+    doc.line(20, yPosition + 2, 190, yPosition + 2);
+    yPosition += 10;
+    
+    // Add data rows
+    doc.setFont(undefined, 'normal');
+    filteredResults.forEach((college, index) => {
+      if (yPosition > 270) { // Start new page if needed
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      const rowData = [
+        college.collegeName.substring(0, 15) + (college.collegeName.length > 15 ? '...' : ''),
         college.city,
-        `"${college.branch}"`,
-        college.category,
-        college.collegeType || 'N/A',
-        college.cap1Cutoff || 'N/A',
-        college.cap2Cutoff || 'N/A',
-        college.cap3Cutoff || 'N/A',
-        college.eligible ? 'YES' : 'NO'
-      ].join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('hidden', '');
-    a.setAttribute('href', url);
-    a.setAttribute('download', `${studentName}-colleges-2024.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+        college.branch.substring(0, 12) + (college.branch.length > 12 ? '...' : ''),
+        college.collegeType?.substring(0, 8) || 'N/A',
+        college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—',
+        college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—',
+        college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—',
+        college.eligible ? 'Eligible' : 'Not Eligible'
+      ];
+      
+      rowData.forEach((data, colIndex) => {
+        doc.text(data, 20 + (colIndex * 22), yPosition);
+      });
+      
+      yPosition += 8;
+    });
+    
+    // Save the PDF
+    doc.save(`${studentName}-colleges-2024.pdf`);
   };
 
   const handlePageChange = (page: number) => {
@@ -142,9 +172,9 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
               New Search
             </Button>
             {results.length > 0 && (
-              <Button onClick={exportToCSV} className="btn-nvidia">
+              <Button onClick={exportToPDF} className="btn-nvidia">
                 <Download className="w-4 h-4 mr-2" />
-                Export
+                Export PDF
               </Button>
             )}
           </div>

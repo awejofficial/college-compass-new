@@ -4,7 +4,6 @@ import { GraduationCap } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { 
-  WelcomeStep,
   PersonalInfoStep,
   AcademicDetailsStep,
   FormStepper
@@ -36,42 +35,38 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
   currentStep,
   isGuest,
   isAnalyzing,
-  showSaveDataAlert,
   formData,
   availableCategories,
   onFormDataChange,
   onGuestAccess,
-  onEmailLogin,
-  onAlertClose,
   onNext,
   onPrev,
   onSubmit,
   onBranchChange,
   onCollegeTypeChange,
-  onCityChange,
-  onLoginClick
+  onCityChange
 }) => {
+  // Auto-trigger guest access if not already set
+  React.useEffect(() => {
+    if (!isGuest) {
+      onGuestAccess();
+    }
+  }, [isGuest, onGuestAccess]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header onLoginClick={onLoginClick} />
+      <Header />
       <div className="flex-1 p-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <div className="minimal-card">
+            <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
               <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-                <GraduationCap className="h-8 w-8 text-nvidia-green" />
+                <GraduationCap className="h-8 w-8 text-primary" />
                 DSE College Finder 2024
               </h1>
               <p className="text-muted-foreground">Find eligible colleges based on real cutoff data</p>
             </div>
           </div>
-
-          <WelcomeStep 
-            onGuestAccess={onGuestAccess}
-            onEmailLogin={onEmailLogin}
-            showAlert={showSaveDataAlert}
-            onAlertClose={onAlertClose}
-          />
 
           {(isGuest || currentStep > 1) && (
             <>
