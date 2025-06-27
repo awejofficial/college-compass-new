@@ -20,13 +20,13 @@ export const FormStepper: React.FC<FormStepperProps> = ({
   onSubmit
 }) => {
   return (
-    <div className="minimal-card mt-6">
+    <div className="bg-white border border-slate-200 rounded-lg p-6 mt-6 shadow-sm">
       <div className="flex justify-between items-center">
         {currentStep > 1 ? (
           <Button 
             variant="outline" 
             onClick={onPrev}
-            className="btn-minimal"
+            className="border-slate-300 hover:border-blue-300 hover:bg-slate-50"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Previous
@@ -42,10 +42,10 @@ export const FormStepper: React.FC<FormStepperProps> = ({
                 key={step}
                 className={`w-2 h-2 rounded-full transition-all duration-200 ${
                   step === currentStep
-                    ? 'bg-black'
+                    ? 'bg-blue-500'
                     : step < currentStep
-                    ? 'bg-black'
-                    : 'bg-gray-300'
+                    ? 'bg-blue-500'
+                    : 'bg-slate-300'
                 }`}
               />
             ))}
@@ -55,7 +55,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({
         {currentStep < 3 ? (
           <Button 
             onClick={onNext}
-            className="btn-nvidia"
+            className="bg-blue-500 hover:bg-blue-600"
           >
             Next
             <ChevronRight className="w-4 h-4 ml-2" />
@@ -64,7 +64,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({
           <Button 
             onClick={onSubmit} 
             disabled={isAnalyzing}
-            className="btn-nvidia disabled:opacity-50"
+            className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50"
           >
             {isAnalyzing ? (
               <>

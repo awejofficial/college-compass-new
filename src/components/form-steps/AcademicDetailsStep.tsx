@@ -20,17 +20,17 @@ export const AcademicDetailsStep: React.FC<AcademicDetailsStepProps> = ({
   onCategoryChange
 }) => {
   return (
-    <Card className="bg-white border-gray-200">
+    <Card className="bg-white border-slate-200 shadow-sm">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-black">Academic Details</CardTitle>
-        <CardDescription className="text-gray-600">
+        <CardTitle className="text-2xl text-slate-900">Academic Details</CardTitle>
+        <CardDescription className="text-slate-600">
           Enter your percentage and category.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="grid gap-2">
-            <Label htmlFor="aggregate" className="text-black">Aggregate Percentage</Label>
+            <Label htmlFor="aggregate" className="text-slate-900">Aggregate Percentage</Label>
             <Input
               id="aggregate"
               type="number"
@@ -38,14 +38,14 @@ export const AcademicDetailsStep: React.FC<AcademicDetailsStepProps> = ({
               placeholder="Enter your percentage (e.g., 82.02)"
               value={aggregate}
               onChange={(e) => onAggregateChange(e.target.value)}
-              className="bg-white border-gray-200 text-black focus:border-black focus:ring-black"
+              className="bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="category" className="text-black">Category</Label>
+            <Label htmlFor="category" className="text-slate-900">Category</Label>
             <select
               id="category"
-              className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-black ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus:border-black disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
               value={category}
               onChange={(e) => onCategoryChange(e.target.value)}
             >
@@ -55,7 +55,7 @@ export const AcademicDetailsStep: React.FC<AcademicDetailsStepProps> = ({
               ))}
             </select>
             {availableCategories.length === 0 && (
-              <p className="text-sm text-red-600 bg-white p-2 rounded border border-gray-200">
+              <p className="text-sm text-red-600 bg-red-50 p-2 rounded border border-red-200">
                 No categories available. Please contact admin to upload cutoff data.
               </p>
             )}
