@@ -23,7 +23,7 @@
     --muted-foreground: 100 116 139; /* Gray-blue for secondary text */
     --accent: 219 234 254; /* Light blue accent */
     --accent-foreground: 30 58 138; /* Dark blue */
-    --destructive: 220 38 38; /* Red for errors */
+    --destructive: 239 68 68; /* Blue-tinted red for errors */
     --destructive-foreground: 255 255 255;
     --border: 226 232 240; /* Light blue-gray borders */
     --input: 255 255 255; /* Pure white input backgrounds */
@@ -33,6 +33,28 @@
     /* Blue gradient variables */
     --blue-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     --blue-light-gradient: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  }
+
+  .dark {
+    --background: 15 23 42; /* Dark blue-gray */
+    --foreground: 248 250 252; /* Light text */
+    --card: 30 41 59; /* Dark blue card */
+    --card-foreground: 248 250 252; /* Light text on cards */
+    --popover: 30 41 59; /* Dark blue */
+    --popover-foreground: 248 250 252; /* Light text */
+    --primary: 59 130 246; /* Blue primary */
+    --primary-foreground: 255 255 255; /* White text */
+    --secondary: 51 65 85; /* Medium blue-gray */
+    --secondary-foreground: 241 245 249; /* Light text */
+    --muted: 51 65 85; /* Medium blue-gray */
+    --muted-foreground: 148 163 184; /* Light gray-blue */
+    --accent: 30 58 138; /* Dark blue accent */
+    --accent-foreground: 219 234 254; /* Light blue text */
+    --destructive: 239 68 68; /* Red for errors */
+    --destructive-foreground: 255 255 255;
+    --border: 51 65 85; /* Medium blue-gray borders */
+    --input: 30 41 59; /* Dark input backgrounds */
+    --ring: 59 130 246; /* Blue focus rings */
   }
 }
 
@@ -46,13 +68,13 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 font-[Inter] antialiased;
+    @apply bg-background text-foreground font-[Inter] antialiased;
     min-height: 100vh;
     line-height: 1.5;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold leading-tight text-slate-900;
+    @apply font-semibold leading-tight text-foreground;
   }
 
   h1 {
@@ -69,11 +91,11 @@
 
   /* Blue-themed form elements */
   input, textarea, select {
-    @apply bg-white border-slate-300 text-slate-900;
+    @apply bg-input border-border text-foreground;
   }
 
   input:focus, textarea:focus, select:focus {
-    @apply bg-white border-blue-500 ring-blue-500;
+    @apply bg-input border-primary ring-primary;
   }
 
   /* Override browser defaults with blue theme */
@@ -81,8 +103,8 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px white inset !important;
-    -webkit-text-fill-color: rgb(15 23 42) !important;
+    -webkit-box-shadow: 0 0 0 30px hsl(var(--input)) inset !important;
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
   }
 }
 
@@ -90,43 +112,43 @@
 @layer utilities {
   /* Blue card styles */
   .minimal-card {
-    @apply bg-white border border-slate-200 rounded-lg p-6 shadow-sm;
+    @apply bg-card border border-border rounded-lg p-6 shadow-sm text-card-foreground;
     transition: all 0.2s ease;
   }
 
   .minimal-card:hover {
-    @apply border-blue-300 shadow-md;
+    @apply border-primary/30 shadow-md;
   }
 
   /* Blue button styles */
   .btn-nvidia {
-    @apply bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 shadow-sm hover:shadow-md;
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 shadow-sm hover:shadow-md;
     transition: all 0.2s ease;
   }
 
   /* Blue secondary button */
   .btn-minimal {
-    @apply bg-white border border-slate-300 text-slate-700 px-6 py-3 rounded-lg font-medium hover:bg-slate-50 hover:border-blue-300;
+    @apply bg-card border border-border text-card-foreground px-6 py-3 rounded-lg font-medium hover:bg-accent hover:border-primary/30;
     transition: all 0.2s ease;
   }
 
   /* Blue input styles */
   .input-minimal {
-    @apply bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-900 placeholder:text-slate-500;
+    @apply bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground;
     transition: all 0.2s ease;
   }
 
   .input-minimal:focus {
-    @apply outline-none ring-2 ring-blue-500 border-blue-500 bg-white;
+    @apply outline-none ring-2 ring-primary border-primary bg-input;
   }
 
   /* Blue utilities */
   .text-nvidia-green {
-    color: rgb(59 130 246);
+    color: hsl(var(--primary));
   }
 
   .bg-nvidia-green {
-    background-color: rgb(59 130 246);
+    background-color: hsl(var(--primary));
   }
 
   /* Container */
@@ -154,37 +176,37 @@
 
   /* Blue focus styles */
   .focus-minimal {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 
   .focus-nvidia {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 
   /* Blue card professional styles */
   .card-professional {
-    @apply bg-white text-slate-900 rounded-lg border border-slate-200 p-6 hover:border-blue-300 shadow-sm hover:shadow-md;
+    @apply bg-card text-card-foreground rounded-lg border border-border p-6 hover:border-primary/30 shadow-sm hover:shadow-md;
     transition: all 0.2s ease;
   }
 
   /* Blue hero section */
   .hero-section {
-    @apply bg-gradient-to-br from-slate-50 to-blue-50;
+    @apply bg-gradient-to-br from-background to-accent/30;
   }
 
   /* Blue metal card styles */
   .metal-card {
-    @apply bg-white border border-slate-200 rounded-lg p-6 shadow-sm;
+    @apply bg-card border border-border rounded-lg p-6 shadow-sm text-card-foreground;
     transition: all 0.2s ease;
   }
 
   .metal-button {
-    @apply bg-blue-500 text-white hover:bg-blue-600 shadow-sm hover:shadow-md;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md;
     transition: all 0.2s ease;
   }
 
   .metal-button-outline {
-    @apply bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-blue-300;
+    @apply bg-card border border-border text-card-foreground hover:bg-accent hover:border-primary/30;
     transition: all 0.2s ease;
   }
 
@@ -243,12 +265,26 @@
     background: var(--blue-light-gradient);
   }
 
-  /* Ensure form validation messages are styled properly */
+  /* Remove all yellow/green colors and replace with blue-based error colors */
   .text-yellow-600,
   .text-yellow-500,
   .text-amber-600,
-  .text-amber-500 {
-    color: rgb(220 38 38) !important; /* Red color */
+  .text-amber-500,
+  .text-green-600,
+  .text-green-500 {
+    color: hsl(var(--destructive)) !important;
+  }
+
+  .bg-yellow-50,
+  .bg-amber-50,
+  .bg-green-50 {
+    background-color: hsl(var(--destructive) / 0.1) !important;
+  }
+
+  .border-yellow-200,
+  .border-amber-200,
+  .border-green-200 {
+    border-color: hsl(var(--destructive) / 0.3) !important;
   }
 }
 
@@ -262,10 +298,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.3);
+  background: hsl(var(--primary) / 0.3);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.5);
+  background: hsl(var(--primary) / 0.5);
 }
