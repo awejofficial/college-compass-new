@@ -29,20 +29,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartClick }) => {
               intelligent matching, and personalized recommendations.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button
                 onClick={onStartClick}
                 className="text-lg px-8 py-4 group bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl text-primary-foreground"
               >
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="text-lg px-8 py-4 border-border hover:border-primary/30 hover:bg-accent text-card-foreground"
-              >
-                View Demo
               </Button>
             </div>
           </div>
