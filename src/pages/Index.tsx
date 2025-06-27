@@ -67,7 +67,8 @@ const Index = () => {
     preferredBranches: [] as string[],
     collegeTypes: [] as string[],
     selectedColleges: [] as string[],
-    collegeSelections: [] as CollegeSelection[]
+    collegeSelections: [] as CollegeSelection[],
+    selectedCities: [] as string[]
   });
 
   const collegeTypeOptions: CollegeType[] = [
@@ -208,6 +209,7 @@ const Index = () => {
       console.log('Fetching data for branches:', formData.preferredBranches);
       console.log('Category:', formData.category);
       console.log('College types filter:', formData.collegeTypes);
+      console.log('Selected cities:', formData.selectedCities);
       console.log('Colleges to search:', collegesToSearch.length);
       
       // Fetch data for all selected branches
@@ -217,7 +219,8 @@ const Index = () => {
         const branchData = await fetchCutoffData(
           formData.category,
           branch,
-          formData.collegeTypes.length > 0 ? formData.collegeTypes : undefined
+          formData.collegeTypes.length > 0 ? formData.collegeTypes : undefined,
+          formData.selectedCities.length > 0 ? formData.selectedCities : undefined
         );
         allCutoffData.push(...branchData);
       }
@@ -306,7 +309,8 @@ const Index = () => {
       preferredBranches: [],
       collegeTypes: [],
       selectedColleges: [],
-      collegeSelections: []
+      collegeSelections: [],
+      selectedCities: []
     });
     setIsGuest(false);
     setShowForm(false);
@@ -358,6 +362,13 @@ const Index = () => {
         preferredBranches: formData.preferredBranches.filter(b => b !== branch)
       });
     }
+  };
+
+  const handleCityChange = (cities: string[]) => {
+    setFormData({
+      ...formData,
+      selectedCities: cities
+    });
   };
 
   if (showResults) {
@@ -470,11 +481,13 @@ const Index = () => {
                   selectedColleges={formData.selectedColleges}
                   collegeSelections={formData.collegeSelections}
                   category={formData.category}
+                  selectedCities={formData.selectedCities}
                   onBranchChange={handleBranchChange}
                   onCollegeTypeChange={handleCollegeTypeChange}
                   onCollegeSelectionChange={(colleges) => setFormData({ ...formData, selectedColleges: colleges })}
                   onCollegeSelectionsChange={(selections) => setFormData({ ...formData, collegeSelections: selections })}
                   onCategoryChange={(category) => setFormData({ ...formData, category })}
+                  onCityChange={handleCityChange}
                 />
               )}
 

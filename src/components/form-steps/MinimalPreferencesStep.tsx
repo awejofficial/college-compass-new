@@ -29,11 +29,13 @@ interface MinimalPreferencesStepProps {
   selectedColleges: string[];
   collegeSelections: CollegeSelection[];
   category: string;
+  selectedCities: string[];
   onBranchChange: (branch: string, checked: boolean) => void;
   onCollegeTypeChange: (collegeType: string, checked: boolean) => void;
   onCollegeSelectionChange: (colleges: string[]) => void;
   onCollegeSelectionsChange: (selections: CollegeSelection[]) => void;
   onCategoryChange: (category: string) => void;
+  onCityChange: (cities: string[]) => void;
 }
 
 export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
@@ -42,18 +44,22 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
   selectedColleges,
   collegeSelections,
   category,
+  selectedCities = [],
   onBranchChange,
   onCollegeTypeChange,
   onCollegeSelectionChange,
   onCollegeSelectionsChange,
-  onCategoryChange
+  onCategoryChange,
+  onCityChange
 }) => {
   const [availableColleges, setAvailableColleges] = useState<string[]>([]);
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [availableBranches, setAvailableBranches] = useState<string[]>([]);
+  const [availableCities, setAvailableCities] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [useAllColleges, setUseAllColleges] = useState(false);
   const [showBranches, setShowBranches] = useState(false);
+  const [showCities, setShowCities] = useState(false);
 
   useEffect(() => {
     loadInitialData();
@@ -82,6 +88,18 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
       setAvailableColleges(colleges);
       setAvailableCategories(categories);
       setAvailableBranches(branches);
+      
+      // Fetch available cities from cutoffs data
+      const response = await fetch('/api/cities'); // We'll need to create this endpoint
+      if (response.ok) {
+        const cities = await response.json();
+        setAvailableCities(cities);
+      } else {
+        // Fallback: extract cities from existing data if API not available
+        const citiesSet = new Set<string>();
+        // This would need to be implemented based on your data structure
+        setAvailableCities(Array.from(citiesSet));
+      }
     } catch (error) {
       console.error('Failed to load initial data:', error);
     } finally {
@@ -142,8 +160,20 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
     onBranchChange(branchName, checked);
   };
 
+  const handleCityToggle = (cityName: string, checked: boolean) => {
+    const newSelectedCities = checked
+      ? [...selectedCities, cityName]
+      : selectedCities.filter(c => c !== cityName);
+    
+    onCityChange(newSelectedCities);
+  };
+
   const getTotalSelectedBranches = () => {
     return preferredBranches.length;
+  };
+
+  const getTotalSelectedCities = () => {
+    return selectedCities.length;
   };
 
   const getCollegeTypeOptions = () => {
@@ -156,27 +186,87 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
       <CardHeader>
         <CardTitle className="text-foreground">Course & College Selection</CardTitle>
         <CardDescription className="text-muted-foreground">
-          Select your category and branches. College selection is optional.
+          Select your preferences for finding the right colleges.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-8">
+      <CardContent className="space-y-6">
         
-        {/* Category Selection */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium text-foreground">Category *</Label>
-          <select
-            value={category}
-            onChange={(e) => onCategoryChange(e.target.value)}
-            className="input-minimal w-full"
-          >
-            <option value="">Select your category</option>
-            {availableCategories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          {!category && (
-            <p className="text-sm text-destructive">Please select your category</p>
-          )}
+        {/* Category and City Selection - Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Category Selection */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-foreground">Category *</Label>
+            <select
+              value={category}
+              onChange={(e) => onCategoryChange(e.target.value)}
+              className="input-minimal w-full"
+            >
+              <option value="">Select your category</option>
+              {availableCategories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            {!category && (
+              <p className="text-sm text-destructive">Please select your category</p>
+            )}
+          </div>
+
+          {/* City Selection */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium text-foreground">
+                Cities ({getTotalSelectedCities()} selected)
+              </Label>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowCities(!showCities)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                {showCities ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </Button>
+            </div>
+            
+            {showCities && (
+              <div className="minimal-card max-h-48 overflow-y-auto">
+                <div className="grid grid-cols-1 gap-2">
+                  {availableCities.map((city) => (
+                    <label key={city} className="flex items-center space-x-3 p-2 hover:bg-muted rounded cursor-pointer transition-minimal">
+                      <input
+                        type="checkbox"
+                        checked={selectedCities.includes(city)}
+                        onChange={(e) => handleCityToggle(city, e.target.checked)}
+                        className="w-4 h-4 accent-nvidia-green"
+                      />
+                      <span className="text-sm text-foreground flex-1">{city}</span>
+                      {selectedCities.includes(city) && (
+                        <Check className="w-4 h-4 text-nvidia-green" />
+                      )}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {selectedCities.length > 0 && (
+              <div className="flex gap-2 flex-wrap">
+                {selectedCities.slice(0, 3).map((city) => (
+                  <Badge key={city} variant="secondary" className="text-xs">
+                    {city}
+                  </Badge>
+                ))}
+                {selectedCities.length > 3 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{selectedCities.length - 3} more
+                  </Badge>
+                )}
+              </div>
+            )}
+            
+            {selectedCities.length === 0 && (
+              <p className="text-sm text-muted-foreground">No cities selected - all cities will be included</p>
+            )}
+          </div>
         </div>
 
         {/* Branch Selection */}
@@ -197,7 +287,7 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
           
           {showBranches && (
             <div className="minimal-card max-h-64 overflow-y-auto">
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {availableBranches.map((branch) => (
                   <label key={branch} className="flex items-center space-x-3 p-2 hover:bg-muted rounded cursor-pointer transition-minimal">
                     <input
@@ -283,7 +373,7 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
         {collegeSelections.length > 0 && getCollegeTypeOptions().length > 0 && (
           <div className="space-y-3">
             <Label className="text-sm font-medium text-foreground">College Type Filter (Optional)</Label>
-            <div className="minimal-card grid grid-cols-2 gap-3">
+            <div className="minimal-card grid grid-cols-1 sm:grid-cols-3 gap-3">
               {getCollegeTypeOptions().map((type) => (
                 <label key={type.value} className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -302,9 +392,10 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
         {/* Selection Summary */}
         <div className="minimal-card bg-muted">
           <div className="text-sm text-foreground">
-            <strong>Summary:</strong>
+            <strong>Selection Summary:</strong>
             <ul className="mt-2 space-y-1 text-muted-foreground">
               <li>Category: {category || 'Not selected'}</li>
+              <li>Cities: {getTotalSelectedCities() > 0 ? `${getTotalSelectedCities()} selected` : 'All cities included'}</li>
               <li>Branches: {getTotalSelectedBranches()} selected</li>
               <li>Colleges: {useAllColleges ? 'All included' : `${selectedColleges.length} selected`}</li>
             </ul>
