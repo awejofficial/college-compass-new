@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import {
   fetchBranchesForColleges,
   fetchAvailableCategories,
   fetchAvailableBranches,
+  fetchAvailableCities,
   type CollegeTypeInfo,
   type CollegeBranchInfo
 } from "@/services/databaseService";
@@ -79,27 +79,17 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
   const loadInitialData = async () => {
     setIsLoading(true);
     try {
-      const [colleges, categories, branches] = await Promise.all([
+      const [colleges, categories, branches, cities] = await Promise.all([
         fetchAllCollegeNames(),
         fetchAvailableCategories(),
-        fetchAvailableBranches()
+        fetchAvailableBranches(),
+        fetchAvailableCities()
       ]);
       
       setAvailableColleges(colleges);
       setAvailableCategories(categories);
       setAvailableBranches(branches);
-      
-      // Fetch available cities from cutoffs data
-      const response = await fetch('/api/cities'); // We'll need to create this endpoint
-      if (response.ok) {
-        const cities = await response.json();
-        setAvailableCities(cities);
-      } else {
-        // Fallback: extract cities from existing data if API not available
-        const citiesSet = new Set<string>();
-        // This would need to be implemented based on your data structure
-        setAvailableCities(Array.from(citiesSet));
-      }
+      setAvailableCities(cities);
     } catch (error) {
       console.error('Failed to load initial data:', error);
     } finally {

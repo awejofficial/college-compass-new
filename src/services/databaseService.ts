@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface CutoffRecord {
@@ -324,4 +323,25 @@ export const getCollegeType = async (collegeName: string): Promise<string | null
 export const fetchUploadHistory = async (userId?: string): Promise<UploadRecord[]> => {
   console.log('Upload history functionality not implemented - uploads table does not exist');
   return [];
+};
+
+// Add new function to get available cities
+export const fetchAvailableCities = async (): Promise<string[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('cutoffs')
+      .select('city')
+      .not('city', 'is', null);
+
+    if (error) {
+      console.error('Database error:', error);
+      return [];
+    }
+
+    const cities = [...new Set(data?.map(item => item.city) || [])];
+    return cities.sort();
+  } catch (error) {
+    console.error('Failed to fetch cities:', error);
+    return [];
+  }
 };
