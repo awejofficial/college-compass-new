@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { MinimalResultsTable } from "@/components/MinimalResultsTable";
 import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { FeatureCards } from "@/components/FeatureCards";
 import { 
@@ -57,6 +58,8 @@ const Index = () => {
   const [availableCollegeTypes, setAvailableCollegeTypes] = useState<string[]>([]);
   const [isGuest, setIsGuest] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [showSaveDataAlert, setShowSaveDataAlert] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     aggregate: '',
@@ -66,7 +69,6 @@ const Index = () => {
     selectedColleges: [] as string[],
     collegeSelections: [] as CollegeSelection[]
   });
-  const [showForm, setShowForm] = useState(false);
 
   const collegeTypeOptions: CollegeType[] = [
     { value: 'Government', label: 'Government' },
@@ -307,15 +309,27 @@ const Index = () => {
       collegeSelections: []
     });
     setIsGuest(false);
+    setShowForm(false);
   };
 
   const handleGuestAccess = () => {
     setIsGuest(true);
+    setShowSaveDataAlert(false);
     setFormData({ ...formData, fullName: 'Guest User' });
   };
 
   const handleEmailLogin = () => {
+    setShowSaveDataAlert(false);
     window.location.href = '/auth';
+  };
+
+  const handleLoginClick = () => {
+    setShowSaveDataAlert(true);
+  };
+
+  const handleStartJourney = () => {
+    setShowForm(true);
+    setShowSaveDataAlert(true);
   };
 
   const handleCollegeTypeChange = (collegeType: string, checked: boolean) => {
@@ -346,13 +360,10 @@ const Index = () => {
     }
   };
 
-  const handleStartJourney = () => {
-    setShowForm(true);
-  };
-
   if (showResults) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
+        <Header onLoginClick={handleLoginClick} />
         <div className="flex-1 p-4">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8">
@@ -385,11 +396,15 @@ const Index = () => {
 
   if (isLoadingOptions) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center minimal-card">
-          <LoadingSpinner />
-          <p className="mt-4 text-foreground">Loading form options...</p>
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header onLoginClick={handleLoginClick} />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center minimal-card">
+            <LoadingSpinner />
+            <p className="mt-4 text-foreground">Loading form options...</p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -397,6 +412,7 @@ const Index = () => {
   if (!showForm) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
+        <Header onLoginClick={handleLoginClick} />
         <div className="flex-1">
           <HeroSection onStartClick={handleStartJourney} />
           <FeatureCards />
@@ -408,6 +424,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Header onLoginClick={handleLoginClick} />
       <div className="flex-1 p-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
@@ -420,12 +437,12 @@ const Index = () => {
             </div>
           </div>
 
-          {!isGuest && currentStep === 1 && (
-            <WelcomeStep 
-              onGuestAccess={handleGuestAccess}
-              onEmailLogin={handleEmailLogin}
-            />
-          )}
+          <WelcomeStep 
+            onGuestAccess={handleGuestAccess}
+            onEmailLogin={handleEmailLogin}
+            showAlert={showSaveDataAlert}
+            onAlertClose={() => setShowSaveDataAlert(false)}
+          />
 
           {(isGuest || currentStep > 1) && (
             <>

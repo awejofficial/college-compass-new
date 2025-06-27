@@ -1,48 +1,58 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Users } from "lucide-react";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle 
+} from "@/components/ui/alert-dialog";
+import { Save, SkipForward } from "lucide-react";
 
 interface WelcomeStepProps {
   onGuestAccess: () => void;
   onEmailLogin: () => void;
+  showAlert: boolean;
+  onAlertClose: () => void;
 }
 
 export const WelcomeStep: React.FC<WelcomeStepProps> = ({
   onGuestAccess,
-  onEmailLogin
+  onEmailLogin,
+  showAlert,
+  onAlertClose
 }) => {
   return (
-    <Card className="bg-card border-border text-card-foreground mb-6">
-      <CardHeader className="text-center">
-        <CardTitle className="text-card-foreground">Welcome to DSE College Finder</CardTitle>
-        <CardDescription className="text-muted-foreground">
-          Choose how you'd like to proceed
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button 
+    <AlertDialog open={showAlert} onOpenChange={onAlertClose}>
+      <AlertDialogContent className="bg-card border-border text-card-foreground">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-card-foreground">Save Your Data?</AlertDialogTitle>
+          <AlertDialogDescription className="text-muted-foreground">
+            Do you want to save your search results and preferences? 
+            You can login to save your data or continue as a guest without saving.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel 
             onClick={onGuestAccess}
-            variant="outline"
-            className="h-auto p-4 flex flex-col items-center gap-2 border-border hover:bg-accent hover:border-primary/30 text-card-foreground"
+            className="flex items-center gap-2"
           >
-            <User className="h-6 w-6" />
-            <span className="font-medium">Continue as Guest</span>
-            <span className="text-xs text-muted-foreground">Quick search without saving</span>
-          </Button>
-          
-          <Button 
+            <SkipForward className="h-4 w-4" />
+            Skip - Continue as Guest
+          </AlertDialogCancel>
+          <AlertDialogAction 
             onClick={onEmailLogin}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 h-auto p-4 flex flex-col items-center gap-2"
+            className="flex items-center gap-2"
           >
-            <Users className="h-6 w-6" />
-            <span className="font-medium">Login with Account</span>
-            <span className="text-xs opacity-90">Save searches & get full features</span>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            <Save className="h-4 w-4" />
+            Login to Save Data
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

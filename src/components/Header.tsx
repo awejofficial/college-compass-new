@@ -1,8 +1,13 @@
 
 import React from 'react';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, LogIn } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onLoginClick?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="container-nvidia">
@@ -18,6 +23,17 @@ export const Header: React.FC = () => {
               <p className="text-xs text-muted-foreground hidden sm:block">Engineering Guidance</p>
             </div>
           </div>
+          
+          {onLoginClick && (
+            <Button 
+              onClick={onLoginClick}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <LogIn className="h-4 w-4" />
+              Login
+            </Button>
+          )}
         </div>
       </div>
     </header>
