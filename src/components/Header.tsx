@@ -1,26 +1,38 @@
 
 import React, { useState, useEffect } from 'react';
 
-const rotatingTexts = [
-  "Smart Search for Smarter Choices.",
-  "Your Admission Buddy",
-  "Decode CAP Rounds Easily",
-  "College Search Simplified"
+const rotatingContent = [
+  {
+    title: "Find Your Perfect Engineering College",
+    subtitle: "Smart Search for Smarter Choices"
+  },
+  {
+    title: "DSE College Finder 2024",
+    subtitle: "Your Admission Buddy"
+  },
+  {
+    title: "Engineering Admission Guide",
+    subtitle: "Decode CAP Rounds Easily"
+  },
+  {
+    title: "College Search Platform",
+    subtitle: "College Search Simplified"
+  }
 ];
 
 export const Header: React.FC = () => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [showLogo, setShowLogo] = useState(false);
+  const [currentContentIndex, setCurrentContentIndex] = useState(0);
+  const [showLogo, setShowLogo] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowLogo(true);
+      setShowLogo(false);
       
       setTimeout(() => {
-        setShowLogo(false);
-        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % rotatingTexts.length);
-      }, 5000);
-    }, 10000);
+        setCurrentContentIndex((prevIndex) => (prevIndex + 1) % rotatingContent.length);
+        setShowLogo(true);
+      }, 500);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -30,11 +42,11 @@ export const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-white rounded-lg border border-border overflow-hidden">
+            <div className="flex items-center justify-center h-12 bg-white rounded-lg border border-border overflow-hidden">
               <img 
                 src="/lovable-uploads/214526ee-d1c4-40fc-b3b1-0b58d7e80662.png" 
                 alt="FindMyCLG Logo" 
-                className={`w-full h-full object-contain transition-all duration-1000 ${
+                className={`h-full w-auto object-contain transition-all duration-1000 ${
                   showLogo ? 'opacity-100 scale-100' : 'opacity-90 scale-95'
                 }`}
               />
@@ -43,13 +55,17 @@ export const Header: React.FC = () => {
               <div className="h-6 flex items-center">
                 <span 
                   className={`text-lg font-semibold text-foreground transition-all duration-1000 ${
-                    showLogo ? 'opacity-0 transform -translate-y-2' : 'opacity-100 transform translate-y-0'
+                    showLogo ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'
                   }`}
                 >
-                  {rotatingTexts[currentTextIndex]}
+                  {rotatingContent[currentContentIndex].title}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground hidden sm:block">Engineering Guidance</p>
+              <p className={`text-xs text-muted-foreground hidden sm:block transition-all duration-1000 ${
+                showLogo ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-2'
+              }`}>
+                {rotatingContent[currentContentIndex].subtitle}
+              </p>
             </div>
           </div>
         </div>
