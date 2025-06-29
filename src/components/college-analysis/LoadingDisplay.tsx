@@ -11,7 +11,7 @@ interface LoadingDisplayProps {
 export const LoadingDisplay: React.FC<LoadingDisplayProps> = ({ onLoginClick }) => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header onLoginClick={onLoginClick} />
+      <Header />
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center minimal-card">
           <LoadingSpinner />
