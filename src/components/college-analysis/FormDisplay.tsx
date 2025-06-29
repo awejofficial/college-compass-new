@@ -9,6 +9,7 @@ import {
   FormStepper
 } from "@/components/form-steps";
 import { MinimalPreferencesStep } from "@/components/form-steps/MinimalPreferencesStep";
+import { RulesInfoSection } from "./RulesInfoSection";
 import { FormData } from "./FormDataTypes";
 
 interface FormDisplayProps {
@@ -114,6 +115,9 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
             </>
           )}
         </div>
+        
+        {/* Rules and Information Section */}
+        <RulesInfoSection />
       </div>
       <Footer />
     </div>
