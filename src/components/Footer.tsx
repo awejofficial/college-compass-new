@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
           
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 College Finder. All rights reserved.
+              © 2024 FindMyClg - DSE College Finder. All rights reserved.
             </p>
           </div>
         </div>

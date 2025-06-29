@@ -4,34 +4,34 @@ import { Search, TrendingUp, FileText, Target, Users, BookOpen } from 'lucide-re
 
 const features = [
   {
-    icon: Search,
-    title: 'Smart College Search',
-    description: 'Advanced filtering system to find colleges that match your academic profile and preferences.',
-  },
-  {
     icon: Target,
-    title: 'Cutoff Predictor',
-    description: 'AI-powered predictions based on historical data and current admission trends.',
+    title: 'Built for DSE Students',
+    description: 'Laser-focused on Direct Second Year (DSE) B.Tech lateral entry admissions — not generalised for all students.',
   },
   {
     icon: TrendingUp,
-    title: 'Eligibility Analyzer',
-    description: 'Real-time analysis of your admission chances with detailed insights.',
+    title: 'Real Data. Real Guidance.',
+    description: 'Authentic government-published CAP cutoff data from Rounds I, II, and III across hundreds of colleges.',
+  },
+  {
+    icon: Search,
+    title: 'Smarter Search System',
+    description: 'You don\'t search colleges; we match you with them based on your diploma aggregate marks and preferences.',
   },
   {
     icon: FileText,
-    title: 'Comprehensive Reports',
-    description: 'Generate detailed reports with personalized college recommendations.',
+    title: 'City-Wise Filters',
+    description: 'Want only Pune, Mumbai, Nagpur colleges? Filter by your preferred cities and get targeted results.',
   },
   {
     icon: Users,
-    title: 'Peer Comparison',
-    description: 'Compare your profile with successful students from previous years.',
+    title: 'Category Based Suggestions',
+    description: 'Complete support for all categories — GOPEN, EWS, OBC, SC, ST with accurate cutoff predictions.',
   },
   {
     icon: BookOpen,
-    title: 'Branch Guidance',
-    description: 'Detailed information about engineering branches and career prospects.',
+    title: 'Built by Students, for Students',
+    description: 'Designed with real problems diploma students face in mind — no more scrolling through government PDFs.',
   }
 ];
 
@@ -41,10 +41,10 @@ export const FeatureCards: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl font-bold text-black mb-4">
-            Why Choose Our Platform
+            🎯 What Makes FindMyClg Different?
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Comprehensive tools and insights to make informed decisions about your engineering career
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            A student-first platform designed specifically for diploma students pursuing DSE admissions in Maharashtra
           </p>
         </div>
 

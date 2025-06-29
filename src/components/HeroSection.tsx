@@ -16,17 +16,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartClick }) => {
           <div className="mb-16 flex flex-col items-center">
             <div className="inline-flex items-center gap-2 bg-card border border-primary/20 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8 shadow-sm">
               <Target className="h-4 w-4" />
-              <span>Precision Engineering Guidance</span>
+              <span>Built for DSE Students</span>
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight text-center">
               Find Your Perfect
-              <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-2">Engineering College</span>
+              <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mt-2">DSE Engineering College</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed text-center">
-              Discover engineering colleges in Maharashtra with real-time cutoff data, 
-              intelligent matching, and personalized recommendations.
+            <p className="text-xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed text-center">
+              Built especially for Diploma students aiming for Direct Second Year (DSE) B.Tech Engineering admissions in Maharashtra. 
+              Discover colleges you can get into based on your actual diploma marks using real CAP cutoff data.
             </p>
 
             <div className="flex justify-center w-full">
@@ -46,20 +46,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartClick }) => {
               { 
                 icon: Users,
                 number: '10K+', 
-                label: 'Students Guided', 
-                desc: 'Successful placements' 
+                label: 'DSE Students Guided', 
+                desc: 'Successful lateral admissions' 
               },
               { 
                 icon: Target,
                 number: '500+', 
-                label: 'Colleges Listed', 
-                desc: 'Comprehensive database' 
+                label: 'Engineering Colleges', 
+                desc: 'Real CAP cutoff data' 
               },
               { 
                 icon: TrendingUp,
                 number: '99%', 
-                label: 'Accuracy Rate', 
-                desc: 'Real-time data' 
+                label: 'Data Accuracy', 
+                desc: 'Government-verified cutoffs' 
               }
             ].map((stat, index) => {
               const Icon = stat.icon;

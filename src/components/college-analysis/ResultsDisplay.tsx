@@ -27,13 +27,13 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
             <div className="bg-card border border-border rounded-lg p-6 shadow-sm mb-6">
               <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
                 <GraduationCap className="h-8 w-8 text-primary" />
-                DSE College Finder 2024
+                FindMyClg - DSE College Finder 2024
               </h1>
               <div className="text-muted-foreground space-y-1">
-                <p>College Eligibility Results for <strong className="text-foreground">{formData.fullName}</strong></p>
+                <p>DSE College Eligibility Results for <strong className="text-foreground">{formData.fullName}</strong></p>
                 <div className="text-sm bg-muted rounded p-3 inline-block mt-2">
-                  <p><strong>Aggregate:</strong> {formData.aggregate}% | <strong>Category:</strong> {formData.category}</p>
-                  <p><strong>Branches:</strong> {formData.preferredBranches.length} | <strong>Colleges:</strong> {formData.selectedColleges.length || 'All'}</p>
+                  <p><strong>Diploma Aggregate:</strong> {formData.aggregate}% | <strong>Category:</strong> {formData.category}</p>
+                  <p><strong>Preferred Branches:</strong> {formData.preferredBranches.length} | <strong>Target Colleges:</strong> {formData.selectedColleges.length || 'All Available'}</p>
                 </div>
               </div>
             </div>

@@ -12,10 +12,10 @@ export const RulesInfoSection: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-card-foreground flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            How to Use the College Finder
+            How to Use FindMyClg for DSE Admissions
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Follow these simple steps to find your perfect engineering college
+            Simple steps to find your perfect DSE engineering college in Maharashtra
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -25,8 +25,8 @@ export const RulesInfoSection: React.FC = () => {
                 <span className="text-primary font-semibold text-sm">1</span>
               </div>
               <div>
-                <h4 className="font-medium text-foreground mb-1">Enter Details</h4>
-                <p className="text-sm text-muted-foreground">Fill in your aggregate marks and select your category</p>
+                <h4 className="font-medium text-foreground mb-1">Enter Your Details</h4>
+                <p className="text-sm text-muted-foreground">Fill in your diploma aggregate marks and select your category (GOPEN, EWS, OBC, SC, ST)</p>
               </div>
             </div>
             
@@ -35,8 +35,8 @@ export const RulesInfoSection: React.FC = () => {
                 <span className="text-primary font-semibold text-sm">2</span>
               </div>
               <div>
-                <h4 className="font-medium text-foreground mb-1">Choose Preferences</h4>
-                <p className="text-sm text-muted-foreground">Select your preferred branches, cities, and college types</p>
+                <h4 className="font-medium text-foreground mb-1">Set Preferences</h4>
+                <p className="text-sm text-muted-foreground">Choose preferred branches, cities (Pune, Mumbai, Nagpur, etc.), and college types</p>
               </div>
             </div>
             
@@ -45,8 +45,8 @@ export const RulesInfoSection: React.FC = () => {
                 <span className="text-primary font-semibold text-sm">3</span>
               </div>
               <div>
-                <h4 className="font-medium text-foreground mb-1">Get Results</h4>
-                <p className="text-sm text-muted-foreground">View eligible colleges with cutoff analysis and export results</p>
+                <h4 className="font-medium text-foreground mb-1">Get Matched</h4>
+                <p className="text-sm text-muted-foreground">Get instant results with colleges where you have the best admission chances</p>
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@ export const RulesInfoSection: React.FC = () => {
         <CardHeader>
           <CardTitle className="text-card-foreground flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-orange-500" />
-            Important Rules & Guidelines
+            DSE Admission Guidelines & Tips
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -66,20 +66,20 @@ export const RulesInfoSection: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-medium text-foreground flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                Eligibility Criteria
+                DSE Eligibility Requirements
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Your aggregate marks must meet the college's cutoff requirements</span>
+                  <span>Must have completed diploma in engineering from Maharashtra</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Category selection affects cutoff calculations</span>
+                  <span>Aggregate marks determine CAP cutoff eligibility</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Results are based on previous year's cutoff data</span>
+                  <span>Category certificates must be valid for reserved seats</span>
                 </li>
               </ul>
             </div>
@@ -87,20 +87,20 @@ export const RulesInfoSection: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-medium text-foreground flex items-center gap-2">
                 <Target className="h-4 w-4 text-blue-500" />
-                Selection Tips
+                Smart Selection Strategy
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Select multiple branches to increase your options</span>
+                  <span>Apply for multiple branches to increase chances</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Leave cities unselected to include all locations</span>
+                  <span>Consider both government and private colleges</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-                  <span>Use "All Colleges" option for comprehensive results</span>
+                  <span>Don't limit by city — explore all Maharashtra options</span>
                 </li>
               </ul>
             </div>
@@ -110,9 +110,9 @@ export const RulesInfoSection: React.FC = () => {
             <div className="flex items-start gap-3">
               <Info className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-yellow-800 mb-2">Important Note</h4>
+                <h4 className="font-medium text-yellow-800 mb-2">Important for DSE Students</h4>
                 <p className="text-sm text-yellow-700">
-                  The cutoff data is based on previous years and may vary. Always verify with official college websites for the most current information.
+                  Our cutoff data is based on previous CAP rounds. Actual cutoffs may vary each year based on seat availability and competition. Always verify with official CAP website for final admissions.
                 </p>
               </div>
             </div>
@@ -120,39 +120,39 @@ export const RulesInfoSection: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* About the Platform */}
+      {/* About FindMyClg */}
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-card-foreground flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-green-500" />
-            About DSE College Finder
+            About FindMyClg
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
-            DSE College Finder is a comprehensive platform designed to help engineering aspirants in Maharashtra 
-            find suitable colleges based on their academic performance and preferences.
+            FindMyClg is a student-first platform built especially for Diploma students aiming for Direct Second Year (DSE) B.Tech Engineering admissions in Maharashtra. Our mission is simple: to help you discover the best colleges you can get into — based on your actual diploma aggregate marks — using real, previous-year CAP cutoff data.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-muted/30 rounded-lg">
               <div className="text-2xl font-bold text-primary mb-1">500+</div>
-              <div className="text-sm text-muted-foreground">Colleges Listed</div>
+              <div className="text-sm text-muted-foreground">Engineering Colleges</div>
             </div>
             <div className="text-center p-4 bg-muted/30 rounded-lg">
               <div className="text-2xl font-bold text-primary mb-1">50+</div>
-              <div className="text-sm text-muted-foreground">Engineering Branches</div>
+              <div className="text-sm text-muted-foreground">DSE Branches</div>
             </div>
             <div className="text-center p-4 bg-muted/30 rounded-lg">
               <div className="text-2xl font-bold text-primary mb-1">Real-time</div>
-              <div className="text-sm text-muted-foreground">Cutoff Data</div>
+              <div className="text-sm text-muted-foreground">CAP Cutoff Data</div>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2 mt-4">
+            <Badge variant="secondary" className="text-xs">DSE Admissions</Badge>
             <Badge variant="secondary" className="text-xs">Maharashtra Engineering</Badge>
-            <Badge variant="secondary" className="text-xs">Cutoff Analysis</Badge>
-            <Badge variant="secondary" className="text-xs">College Recommendations</Badge>
+            <Badge variant="secondary" className="text-xs">CAP Cutoff Analysis</Badge>
+            <Badge variant="secondary" className="text-xs">Diploma Students</Badge>
             <Badge variant="secondary" className="text-xs">Free Platform</Badge>
           </div>
         </CardContent>
@@ -161,13 +161,13 @@ export const RulesInfoSection: React.FC = () => {
       {/* Contact Information */}
       <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
         <CardContent className="p-6 text-center">
-          <h4 className="font-medium text-foreground mb-2">Need Help?</h4>
+          <h4 className="font-medium text-foreground mb-2">Need Help with DSE Admissions?</h4>
           <p className="text-sm text-muted-foreground mb-4">
-            If you have questions about using the platform or need assistance with college selection, 
+            If you have questions about using FindMyClg or need assistance with DSE college selection, 
             feel free to reach out to our support team.
           </p>
           <div className="text-sm text-muted-foreground">
-            <span className="font-medium">Developed by:</span> Awej Engineering Guidance
+            <span className="font-medium">Built by Students, for Students</span> — FindMyClg Team
           </div>
         </CardContent>
       </Card>
