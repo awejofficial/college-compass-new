@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,14 @@ interface MinimalResultsTableProps {
   onRefillForm: () => void;
 }
 
+interface GroupedCollege {
+  collegeName: string;
+  city: string;
+  collegeType: string;
+  branches: CollegeMatch[];
+  hasEligibleBranches: boolean;
+}
+
 export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({ 
   results, 
   studentName, 
@@ -32,7 +41,35 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
   const [filterType, setFilterType] = useState<'all' | 'eligible' | 'government' | 'private'>('all');
   const [cityFilter, setCityFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const resultsPerPage = 15;
+  const resultsPerPage = 10; // Reduced since we're showing grouped results
+
+  // Group colleges by name
+  const groupedColleges = React.useMemo(() => {
+    const grouped = new Map<string, GroupedCollege>();
+    
+    results.forEach(college => {
+      const key = `${college.collegeName}-${college.city}`;
+      
+      if (!grouped.has(key)) {
+        grouped.set(key, {
+          collegeName: college.collegeName,
+          city: college.city,
+          collegeType: college.collegeType,
+          branches: [],
+          hasEligibleBranches: false
+        });
+      }
+      
+      const group = grouped.get(key)!;
+      group.branches.push(college);
+      
+      if (college.eligible) {
+        group.hasEligibleBranches = true;
+      }
+    });
+    
+    return Array.from(grouped.values());
+  }, [results]);
 
   // Get unique cities for filter
   const uniqueCities = [...new Set(results.map(college => college.city))].sort();
@@ -43,107 +80,125 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
   }, [results, filterType, cityFilter, searchTerm]);
 
   // Filter and search results
-  const filteredResults = results
-    .filter(college => {
+  const filteredGroups = groupedColleges
+    .filter(group => {
       // Type filter
       let typeMatch = true;
       switch (filterType) {
         case 'eligible':
-          typeMatch = college.eligible;
+          typeMatch = group.hasEligibleBranches;
           break;
         case 'government':
-          typeMatch = college.collegeType?.toLowerCase().includes('government');
+          typeMatch = group.collegeType?.toLowerCase().includes('government');
           break;
         case 'private':
-          typeMatch = college.collegeType?.toLowerCase().includes('private');
+          typeMatch = group.collegeType?.toLowerCase().includes('private');
           break;
       }
 
       // City filter
-      const cityMatch = cityFilter === '' || college.city === cityFilter;
+      const cityMatch = cityFilter === '' || group.city === cityFilter;
 
       // Search filter
       const searchMatch = searchTerm === '' || 
-        college.collegeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        college.branch.toLowerCase().includes(searchTerm.toLowerCase());
+        group.collegeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.branches.some(branch => branch.branch.toLowerCase().includes(searchTerm.toLowerCase()));
 
       return typeMatch && cityMatch && searchMatch;
     })
     .sort((a, b) => {
-      // Sort eligible first, then by lowest cutoff
-      if (a.eligible && !b.eligible) return -1;
-      if (!a.eligible && b.eligible) return 1;
-      
-      const getCutoff = (college: CollegeMatch) => {
-        const cutoffs = [college.cap1Cutoff, college.cap2Cutoff, college.cap3Cutoff]
-          .filter(c => c !== null) as number[];
-        return cutoffs.length > 0 ? Math.min(...cutoffs) : 100;
-      };
-      
-      return getCutoff(a) - getCutoff(b);
+      // Sort colleges with eligible branches first
+      if (a.hasEligibleBranches && !b.hasEligibleBranches) return -1;
+      if (!a.hasEligibleBranches && b.hasEligibleBranches) return 1;
+      return a.collegeName.localeCompare(b.collegeName);
     });
 
-  const totalPages = Math.ceil(filteredResults.length / resultsPerPage);
+  const totalPages = Math.ceil(filteredGroups.length / resultsPerPage);
   const startIndex = (currentPage - 1) * resultsPerPage;
   const endIndex = startIndex + resultsPerPage;
-  const currentResults = filteredResults.slice(startIndex, endIndex);
+  const currentGroups = filteredGroups.slice(startIndex, endIndex);
 
-  const exportToPDF = () => {
+  const exportToPDF = async () => {
     const doc = new jsPDF();
     
-    // Set title
-    doc.setFontSize(16);
-    doc.text(`College Results for ${studentName}`, 20, 20);
-    
-    // Add summary
-    doc.setFontSize(12);
-    doc.text(`Total Colleges: ${filteredResults.length}`, 20, 35);
-    doc.text(`Eligible Colleges: ${eligibleCount}`, 20, 45);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 55);
-    
-    // Table headers
-    doc.setFontSize(10);
-    const headers = ['College Name', 'City', 'Branch', 'Type', 'CAP1', 'CAP2', 'CAP3', 'Status'];
-    let yPosition = 70;
-    
-    // Draw headers
-    doc.setFont(undefined, 'bold');
-    headers.forEach((header, index) => {
-      doc.text(header, 20 + (index * 22), yPosition);
-    });
-    
-    // Draw line under headers
-    doc.line(20, yPosition + 2, 190, yPosition + 2);
-    yPosition += 10;
-    
-    // Add data rows
-    doc.setFont(undefined, 'normal');
-    filteredResults.forEach((college, index) => {
-      if (yPosition > 270) { // Start new page if needed
-        doc.addPage();
-        yPosition = 20;
-      }
+    // Add logo
+    try {
+      const logoImg = new Image();
+      logoImg.crossOrigin = 'anonymous';
+      logoImg.src = '/lovable-uploads/214526ee-d1c4-40fc-b3b1-0b58d7e80662.png';
       
-      const rowData = [
-        college.collegeName.substring(0, 15) + (college.collegeName.length > 15 ? '...' : ''),
-        college.city,
-        college.branch.substring(0, 12) + (college.branch.length > 12 ? '...' : ''),
-        college.collegeType?.substring(0, 8) || 'N/A',
-        college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—',
-        college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—',
-        college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—',
-        college.eligible ? 'Eligible' : 'Not Eligible'
-      ];
-      
-      rowData.forEach((data, colIndex) => {
-        doc.text(data, 20 + (colIndex * 22), yPosition);
-      });
-      
-      yPosition += 8;
-    });
-    
-    // Save the PDF
-    doc.save(`${studentName}-colleges-2024.pdf`);
+      logoImg.onload = () => {
+        // Add logo at top
+        doc.addImage(logoImg, 'PNG', 20, 10, 30, 15);
+        
+        // Set title
+        doc.setFontSize(16);
+        doc.text(`College Results for ${studentName}`, 60, 20);
+        
+        // Add summary
+        doc.setFontSize(12);
+        doc.text(`Total Colleges: ${filteredGroups.length}`, 20, 35);
+        doc.text(`Eligible Colleges: ${eligibleCount}`, 20, 45);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 55);
+        
+        // Add content
+        let yPosition = 70;
+        
+        filteredGroups.forEach((group) => {
+          if (yPosition > 250) {
+            doc.addPage();
+            yPosition = 20;
+          }
+          
+          // College header
+          doc.setFontSize(14);
+          doc.setFont(undefined, 'bold');
+          doc.text(`${group.collegeName} - ${group.city}`, 20, yPosition);
+          yPosition += 8;
+          
+          doc.setFontSize(10);
+          doc.setFont(undefined, 'normal');
+          doc.text(`Type: ${group.collegeType}`, 20, yPosition);
+          yPosition += 8;
+          
+          // Branches
+          group.branches.forEach(branch => {
+            if (yPosition > 270) {
+              doc.addPage();
+              yPosition = 20;
+            }
+            
+            doc.text(`• ${branch.branch} (${branch.category})`, 25, yPosition);
+            doc.text(`CAP1: ${branch.cap1Cutoff || 'N/A'}%`, 120, yPosition);
+            doc.text(`CAP2: ${branch.cap2Cutoff || 'N/A'}%`, 150, yPosition);
+            doc.text(`CAP3: ${branch.cap3Cutoff || 'N/A'}%`, 180, yPosition);
+            
+            yPosition += 6;
+          });
+          
+          yPosition += 5; // Extra space between colleges
+        });
+        
+        // Add footer
+        const pageCount = doc.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.text('Generated by FindMyCLG - Your College Search Platform', 20, 290);
+          doc.text(`Page ${i} of ${pageCount}`, 180, 290);
+        }
+        
+        // Save the PDF
+        doc.save(`${studentName}-colleges-2024.pdf`);
+      };
+    } catch (error) {
+      console.error('Error loading logo for PDF:', error);
+      // Fallback without logo
+      doc.setFontSize(16);
+      doc.text(`College Results for ${studentName}`, 20, 20);
+      // ... rest of PDF generation without logo
+      doc.save(`${studentName}-colleges-2024.pdf`);
+    }
   };
 
   const handlePageChange = (page: number) => {
@@ -152,6 +207,7 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
   };
 
   const eligibleCount = results.filter(college => college.eligible).length;
+  const totalColleges = groupedColleges.length;
 
   return (
     <div className="container-minimal py-8">
@@ -163,7 +219,7 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
               College Results for {studentName}
             </h1>
             <p className="text-muted-foreground">
-              {filteredResults.length} colleges found ({eligibleCount} eligible)
+              {totalColleges} colleges found ({eligibleCount} eligible branches)
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -237,78 +293,94 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
         </div>
       )}
 
-      {/* Results Table */}
-      {currentResults.length > 0 ? (
+      {/* Results - Grouped by College */}
+      {currentGroups.length > 0 ? (
         <>
-          <div className="minimal-card overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4 font-medium text-foreground">College</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">City</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Branch</th>
-                  <th className="text-left py-3 px-4 font-medium text-foreground">Type</th>
-                  <th className="text-center py-3 px-4 font-medium text-foreground">CAP1</th>
-                  <th className="text-center py-3 px-4 font-medium text-foreground">CAP2</th>
-                  <th className="text-center py-3 px-4 font-medium text-foreground">CAP3</th>
-                  <th className="text-center py-3 px-4 font-medium text-foreground">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentResults.map((college, index) => (
-                  <tr 
-                    key={`${college.collegeName}-${college.branch}-${college.category}-${index}`}
-                    className={`border-b border-border hover:bg-muted transition-minimal ${
-                      college.eligible ? 'bg-nvidia-green/5' : ''
-                    }`}
-                  >
-                    <td className="py-4 px-4">
-                      <div>
-                        <div className="font-medium text-foreground text-sm mb-1">
-                          {college.collegeName}
-                        </div>
+          <div className="space-y-4">
+            {currentGroups.map((group, groupIndex) => (
+              <div 
+                key={`${group.collegeName}-${group.city}-${groupIndex}`}
+                className={`minimal-card ${
+                  group.hasEligibleBranches ? 'border-nvidia-green/30 bg-nvidia-green/5' : ''
+                }`}
+              >
+                {/* College Header */}
+                <div className="border-b border-border pb-4 mb-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground mb-1">
+                        {group.collegeName}
+                      </h3>
+                      <div className="flex items-center gap-2">
                         <Badge variant="outline" className="text-xs">
-                          {college.category}
+                          {group.city}
                         </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {group.collegeType || 'N/A'}
+                        </Badge>
+                        {group.hasEligibleBranches && (
+                          <Badge className="text-xs bg-nvidia-green/20 text-nvidia-green border-nvidia-green/30">
+                            Has Eligible Branches
+                          </Badge>
+                        )}
                       </div>
-                    </td>
-                    <td className="py-4 px-4 text-sm text-foreground">{college.city}</td>
-                    <td className="py-4 px-4 text-sm text-foreground">{college.branch}</td>
-                    <td className="py-4 px-4">
-                      <Badge variant="secondary" className="text-xs">
-                        {college.collegeType || 'N/A'}
-                      </Badge>
-                    </td>
-                    <td className="py-4 px-4 text-center text-sm">
-                      <span className={college.cap1Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
-                        {college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-center text-sm">
-                      <span className={college.cap2Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
-                        {college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-center text-sm">
-                      <span className={college.cap3Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
-                        {college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      {college.eligible ? (
-                        <div className="flex items-center justify-center">
-                          <Check className="w-5 h-5 text-nvidia-green" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Branches */}
+                <div className="space-y-2">
+                  <h4 className="font-medium text-foreground mb-3">Available Branches:</h4>
+                  {group.branches.map((branch, branchIndex) => (
+                    <div 
+                      key={`${branch.branch}-${branch.category}-${branchIndex}`}
+                      className={`p-3 rounded-lg border ${
+                        branch.eligible 
+                          ? 'border-nvidia-green/30 bg-nvidia-green/10' 
+                          : 'border-border bg-muted/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-medium text-foreground">{branch.branch}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {branch.category}
+                            </Badge>
+                            {branch.eligible ? (
+                              <Check className="w-4 h-4 text-nvidia-green" />
+                            ) : (
+                              <X className="w-4 h-4 text-muted-foreground" />
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-3 gap-4 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">CAP1: </span>
+                              <span className={branch.cap1Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
+                                {branch.cap1Cutoff ? `${branch.cap1Cutoff}%` : '—'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">CAP2: </span>
+                              <span className={branch.cap2Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
+                                {branch.cap2Cutoff ? `${branch.cap2Cutoff}%` : '—'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">CAP3: </span>
+                              <span className={branch.cap3Cutoff ? 'text-foreground font-medium' : 'text-muted-foreground'}>
+                                {branch.cap3Cutoff ? `${branch.cap3Cutoff}%` : '—'}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center">
-                          <X className="w-5 h-5 text-muted-foreground" />
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
           {totalPages > 1 && (
@@ -317,7 +389,7 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
-                totalResults={filteredResults.length}
+                totalResults={filteredGroups.length}
                 resultsPerPage={resultsPerPage}
               />
             </div>
@@ -348,9 +420,9 @@ export const MinimalResultsTable: React.FC<MinimalResultsTableProps> = ({
               <Check className="w-4 h-4 text-nvidia-green" />
             </div>
             <div>
-              <h3 className="font-medium text-foreground mb-1">Eligible Colleges Found</h3>
+              <h3 className="font-medium text-foreground mb-1">Eligible Branches Found</h3>
               <p className="text-muted-foreground text-sm">
-                You're eligible for {eligibleCount} out of {results.length} colleges. Focus on these options.
+                You're eligible for {eligibleCount} branches across {totalColleges} colleges. Focus on these options.
               </p>
             </div>
           </div>
