@@ -41,7 +41,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartClick }) => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-slide-up justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-slide-up max-w-4xl mx-auto">
             {[
               { 
                 icon: Users,
@@ -64,7 +64,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartClick }) => {
             ].map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={stat.label} className="bg-card rounded-lg border border-border p-6 text-center group hover:border-primary/30 hover:shadow-md transition-all duration-200 w-full max-w-sm">
+                <div key={stat.label} className="bg-card rounded-lg border border-border p-6 text-center group hover:border-primary/30 hover:shadow-md transition-all duration-200 w-full">
                   <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg mx-auto mb-4 group-hover:bg-primary/20 transition-colors duration-200">
                     <Icon className="h-6 w-6 text-primary" />
                   </div>

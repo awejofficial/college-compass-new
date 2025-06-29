@@ -4,22 +4,19 @@ import { Github, Instagram, Linkedin, Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-card border-t border-border py-12 mt-auto">
-      <div className="container-nvidia">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="text-center md:text-left mb-6 md:mb-0">
-            <p className="text-lg font-medium text-card-foreground flex items-center justify-center md:justify-start gap-2">
+    <footer className="bg-card border-t border-border py-8 mt-auto">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center justify-center space-y-6">
+          <div className="text-center">
+            <p className="text-lg font-medium text-card-foreground flex items-center justify-center gap-2">
               Made with 
               <Heart className="h-5 w-5 text-destructive fill-current" />
               by 
               <span className="font-bold text-primary">Awej</span>
             </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Engineering your path to success
-            </p>
           </div>
           
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center bg-card border border-border rounded-lg p-2">
             <a
               href="https://instagram.com/awej04"
               target="_blank"
@@ -50,12 +47,12 @@ export const Footer: React.FC = () => {
               <Linkedin className="h-6 w-6" />
             </a>
           </div>
-        </div>
-        
-        <div className="border-t border-border mt-8 pt-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            © 2024 College Finder. All rights reserved.
-          </p>
+          
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              © 2024 College Finder. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

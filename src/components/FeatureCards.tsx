@@ -38,7 +38,7 @@ const features = [
 export const FeatureCards: React.FC = () => {
   return (
     <section className="py-20 bg-white">
-      <div className="container-nvidia">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl font-bold text-black mb-4">
             Why Choose Our Platform
@@ -48,7 +48,7 @@ export const FeatureCards: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid-nvidia-4 animate-slide-up">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto animate-slide-up">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
