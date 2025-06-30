@@ -12,6 +12,7 @@ import {
   fetchAvailableCategories,
   fetchAvailableBranches,
   fetchAvailableCities,
+  fetchAvailableCollegeTypes,
   type CollegeTypeInfo,
   type CollegeBranchInfo
 } from "@/services/databaseService";
@@ -57,6 +58,7 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [availableBranches, setAvailableBranches] = useState<string[]>([]);
   const [availableCities, setAvailableCities] = useState<string[]>([]);
+  const [availableCollegeTypes, setAvailableCollegeTypes] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [useAllColleges, setUseAllColleges] = useState(false);
   const [showBranches, setShowBranches] = useState(false);
@@ -80,17 +82,19 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
   const loadInitialData = async () => {
     setIsLoading(true);
     try {
-      const [colleges, categories, branches, cities] = await Promise.all([
+      const [colleges, categories, branches, cities, collegeTypes] = await Promise.all([
         fetchAllCollegeNames(),
         fetchAvailableCategories(),
         fetchAvailableBranches(),
-        fetchAvailableCities()
+        fetchAvailableCities(),
+        fetchAvailableCollegeTypes()
       ]);
       
       setAvailableColleges(colleges);
       setAvailableCategories(categories);
       setAvailableBranches(branches);
       setAvailableCities(cities);
+      setAvailableCollegeTypes(collegeTypes);
     } catch (error) {
       console.error('Failed to load initial data:', error);
     } finally {
@@ -383,27 +387,25 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
           </CardContent>
         </Card>
 
-        {/* College Type Filter */}
-        {collegeSelections.length > 0 && (
-          <Card className="bg-card border-border shadow-sm">
-            <CardContent className="p-4">
-              <Label className="text-sm font-medium text-card-foreground">College Type Filter (Optional)</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
-                {['Government', 'Government Autonomous', 'Private'].map((type) => (
-                  <label key={type} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={collegeTypes.includes(type)}
-                      onChange={(e) => onCollegeTypeChange(type, e.target.checked)}
-                      className="w-4 h-4 accent-primary"
-                    />
-                    <span className="text-sm text-foreground">{type}</span>
-                  </label>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* College Type Filter - Now using database data */}
+        <Card className="bg-card border-border shadow-sm">
+          <CardContent className="p-4">
+            <Label className="text-sm font-medium text-card-foreground">College Type Filter (Optional)</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+              {availableCollegeTypes.map((type) => (
+                <label key={type} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={collegeTypes.includes(type)}
+                    onChange={(e) => onCollegeTypeChange(type, e.target.checked)}
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="text-sm text-foreground">{type}</span>
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Selection Summary */}
         <Card className="bg-muted border-border">
@@ -415,6 +417,7 @@ export const MinimalPreferencesStep: React.FC<MinimalPreferencesStepProps> = ({
                 <li>Cities: {selectedCities.length > 0 ? `${selectedCities.length} selected` : 'All cities included'}</li>
                 <li>Branches: {preferredBranches.length} selected</li>
                 <li>Colleges: {useAllColleges ? 'All included' : `${selectedColleges.length} selected`}</li>
+                <li>College Types: {collegeTypes.length > 0 ? `${collegeTypes.length} selected` : 'All types included'}</li>
               </ul>
             </div>
             

@@ -7,6 +7,7 @@ import { FilterBar } from "./FilterBar";
 import { ResultsTableRow } from "./ResultsTableRow";
 import { GoToTopButton } from "./GoToTopButton";
 import { SummaryCard } from "./SummaryCard";
+import { PaginationControls } from "@/components/PaginationControls";
 import { exportToPDF } from "./PDFExporter";
 
 interface TNEAStyleResultsTableProps {
@@ -38,6 +39,8 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
     searchTerm: ''
   });
   const [showGoToTop, setShowGoToTop] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 50;
   const isMobile = useIsMobile();
 
   // Scroll detection for go-to-top button
@@ -48,6 +51,11 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
 
   // Get unique filter options
   const uniqueCities = [...new Set(results.map(r => r.city))].sort();
@@ -85,6 +93,12 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
       return getCutoff(a) - getCutoff(b);
     });
 
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredResults.length / resultsPerPage);
+  const startIndex = (currentPage - 1) * resultsPerPage;
+  const endIndex = startIndex + resultsPerPage;
+  const currentResults = filteredResults.slice(startIndex, endIndex);
+
   const toggleFilter = (type: keyof FilterState, value: string | boolean) => {
     setFilters(prev => {
       if (type === 'eligibleOnly') {
@@ -114,6 +128,11 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
 
   const handleExportToPDF = () => {
     exportToPDF(studentName, studentAggregate, filteredResults);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const eligibleCount = filteredResults.filter(c => c.eligible).length;
@@ -156,7 +175,7 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredResults.map((college, index) => {
+                  {currentResults.map((college, index) => {
                     const collegeKey = `${college.collegeName}-${college.branch}-${college.category}`;
                     
                     return (
@@ -174,6 +193,19 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
               </Table>
             </div>
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="p-4 border-t bg-gray-50">
+              <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                totalResults={filteredResults.length}
+                resultsPerPage={resultsPerPage}
+              />
+            </div>
+          )}
         </div>
 
         <SummaryCard eligibleCount={eligibleCount} studentAggregate={studentAggregate} />
