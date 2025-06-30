@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Github, Instagram, Linkedin, Heart } from 'lucide-react';
 
@@ -47,10 +46,9 @@ export const Footer: React.FC = () => {
               <Linkedin className="h-6 w-6" />
             </a>
           </div>
-          
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 FindMyClg - DSE College Finder. All rights reserved.
+              © 2025 FindMyClg - Awej. All rights reserved.
             </p>
           </div>
         </div>
