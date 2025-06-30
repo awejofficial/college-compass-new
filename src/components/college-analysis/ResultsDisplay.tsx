@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GraduationCap } from "lucide-react";
-import { MinimalResultsTable } from "@/components/MinimalResultsTable";
+import { CollegeResultsTable } from "./CollegeResultsTable";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CollegeMatch, FormData } from "./FormDataTypes";
@@ -39,9 +39,10 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
             </div>
           </div>
 
-          <MinimalResultsTable 
+          <CollegeResultsTable 
             results={results} 
             studentName={formData.fullName}
+            studentAggregate={parseFloat(formData.aggregate)}
             onRefillForm={onRefillForm}
           />
         </div>
