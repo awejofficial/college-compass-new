@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RefreshCw, Download, ChevronUp, Heart, Filter, X, Check } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CollegeMatch } from "./FormDataTypes";
+import { useIsMobile } from "@/hooks/use-mobile";
 import jsPDF from 'jspdf';
 
 interface TNEAStyleResultsTableProps {
@@ -36,6 +36,7 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
   const [shortlistedColleges, setShortlistedColleges] = useState<Set<string>>(new Set());
   const [showGoToTop, setShowGoToTop] = useState(false);
   const [showShortlist, setShowShortlist] = useState(false);
+  const isMobile = useIsMobile();
 
   // Scroll detection for go-to-top button
   useEffect(() => {
@@ -176,45 +177,46 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
   };
 
   const eligibleCount = filteredResults.filter(c => c.eligible).length;
+  const isGuestUser = studentName === "Guest User" || !studentName;
 
   return (
     <div className="space-y-4">
       {/* Sticky Filter Bar */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b shadow-sm p-4">
+      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b shadow-sm p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header Row */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 space-y-2 md:space-y-0">
             <div>
-              <h2 className="text-xl font-bold text-foreground">
-                College Results for {studentName}
+              <h2 className={`font-bold text-foreground ${isMobile ? 'text-lg' : 'text-xl'}`}>
+                🎓 College Results for {isGuestUser ? "Guest User" : studentName}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-sm'}`}>
                 {filteredResults.length} colleges • {eligibleCount} eligible
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button 
                 variant="outline" 
-                size="sm"
+                size={isMobile ? "sm" : "sm"}
                 onClick={() => setShowShortlist(!showShortlist)}
-                className="relative"
+                className="relative text-xs md:text-sm"
               >
-                <Heart className="w-4 h-4 mr-1" />
+                <Heart className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                 My List ({shortlistedColleges.size})
               </Button>
-              <Button variant="outline" size="sm" onClick={onRefillForm}>
-                <RefreshCw className="w-4 h-4 mr-1" />
+              <Button variant="outline" size={isMobile ? "sm" : "sm"} onClick={onRefillForm} className="text-xs md:text-sm">
+                <RefreshCw className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                 New Search
               </Button>
-              <Button size="sm" onClick={exportToPDF}>
-                <Download className="w-4 h-4 mr-1" />
+              <Button size={isMobile ? "sm" : "sm"} onClick={exportToPDF} className="text-xs md:text-sm">
+                <Download className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                 Export
               </Button>
             </div>
           </div>
 
           {/* Filter Controls */}
-          <div className="flex flex-wrap items-center gap-4 text-sm">
+          <div className={`flex flex-wrap items-center gap-2 md:gap-4 ${isMobile ? 'text-xs' : 'text-sm'}`}>
             {/* Eligible Only Toggle */}
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -230,12 +232,12 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">City:</span>
               <div className="flex flex-wrap gap-1">
-                {uniqueCities.slice(0, 5).map(city => (
+                {uniqueCities.slice(0, isMobile ? 3 : 5).map(city => (
                   <Button 
                     key={city}
                     variant={filters.cities.includes(city) ? "default" : "outline"}
                     size="sm"
-                    className="h-6 px-2 text-xs"
+                    className={`h-5 md:h-6 px-1 md:px-2 ${isMobile ? 'text-xs' : 'text-xs'}`}
                     onClick={() => toggleFilter('cities', city)}
                   >
                     {city}
@@ -248,15 +250,15 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">Branch:</span>
               <div className="flex flex-wrap gap-1">
-                {uniqueBranches.slice(0, 4).map(branch => (
+                {uniqueBranches.slice(0, isMobile ? 2 : 4).map(branch => (
                   <Button 
                     key={branch}
                     variant={filters.branches.includes(branch) ? "default" : "outline"}
                     size="sm"
-                    className="h-6 px-2 text-xs"
+                    className={`h-5 md:h-6 px-1 md:px-2 ${isMobile ? 'text-xs' : 'text-xs'}`}
                     onClick={() => toggleFilter('branches', branch)}
                   >
-                    {branch.length > 8 ? `${branch.substring(0, 8)}...` : branch}
+                    {branch.length > (isMobile ? 6 : 8) ? `${branch.substring(0, isMobile ? 6 : 8)}...` : branch}
                   </Button>
                 ))}
               </div>
@@ -264,7 +266,7 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
 
             {/* Clear Filters */}
             {(filters.cities.length > 0 || filters.branches.length > 0 || filters.eligibleOnly) && (
-              <Button variant="ghost" size="sm" onClick={clearFilters} className="h-6 px-2 text-xs">
+              <Button variant="ghost" size="sm" onClick={clearFilters} className={`h-5 md:h-6 px-1 md:px-2 ${isMobile ? 'text-xs' : 'text-xs'}`}>
                 <X className="w-3 h-3 mr-1" />
                 Clear
               </Button>
@@ -274,127 +276,138 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
       </div>
 
       {/* Results Table */}
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-2 md:px-4">
         <div className="bg-white rounded-lg border overflow-hidden">
+          {/* Mobile: Horizontal scroll container */}
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-gray-50">
-                <TableRow>
-                  <TableHead className="w-8"></TableHead>
-                  <TableHead className="font-medium">College</TableHead>
-                  <TableHead className="w-24 font-medium">City</TableHead>
-                  <TableHead className="w-20 font-medium">Type</TableHead>
-                  <TableHead className="font-medium">Branch</TableHead>
-                  <TableHead className="w-16 text-center font-medium">CAP1</TableHead>
-                  <TableHead className="w-16 text-center font-medium">CAP2</TableHead>
-                  <TableHead className="w-16 text-center font-medium">CAP3</TableHead>
-                  <TableHead className="w-20 text-center font-medium">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredResults.map((college, index) => {
-                  const collegeKey = `${college.collegeName}-${college.branch}-${college.category}`;
-                  const isShortlisted = shortlistedColleges.has(collegeKey);
-                  const isEligible = college.eligible;
-                  
-                  return (
-                    <TableRow 
-                      key={collegeKey}
-                      className={`
-                        text-sm hover:bg-gray-50 
-                        ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}
-                        ${isEligible ? 'border-l-4 border-l-green-500 bg-green-50/30' : ''}
-                      `}
-                    >
-                      <TableCell className="py-1 px-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={() => toggleShortlist(collegeKey)}
-                        >
-                          <Heart 
-                            className={`h-3 w-3 ${
-                              isShortlisted ? 'fill-red-500 text-red-500' : 'text-gray-400'
-                            }`} 
-                          />
-                        </Button>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 font-medium max-w-64">
-                        <div className="truncate" title={college.collegeName}>
-                          {college.collegeName}
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-1 px-2">
-                        <Badge variant="outline" className="text-xs">
-                          {college.city}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="py-1 px-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {college.collegeType?.includes('Government') ? 'Govt' : 'Private'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 max-w-32">
-                        <div className="truncate" title={college.branch}>
-                          {college.branch}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {college.category}
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 text-center text-xs">
-                        <span className={
-                          college.cap1Cutoff && studentAggregate >= college.cap1Cutoff 
-                            ? 'text-green-600 font-medium' 
-                            : 'text-muted-foreground'
-                        }>
-                          {college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 text-center text-xs">
-                        <span className={
-                          college.cap2Cutoff && studentAggregate >= college.cap2Cutoff 
-                            ? 'text-green-600 font-medium' 
-                            : 'text-muted-foreground'
-                        }>
-                          {college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 text-center text-xs">
-                        <span className={
-                          college.cap3Cutoff && studentAggregate >= college.cap3Cutoff 
-                            ? 'text-green-600 font-medium' 
-                            : 'text-muted-foreground'
-                        }>
-                          {college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—'}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-1 px-2 text-center">
-                        {isEligible ? (
-                          <Check className="h-4 w-4 text-green-600 mx-auto" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-500 mx-auto" />
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            <div className={isMobile ? "min-w-[800px]" : ""}>
+              <Table>
+                <TableHeader className="bg-gray-50 sticky top-0">
+                  <TableRow>
+                    <TableHead className="w-8 p-1 md:p-2"></TableHead>
+                    <TableHead className={`font-medium ${isMobile ? 'min-w-[200px]' : ''} p-1 md:p-2`}>College</TableHead>
+                    <TableHead className={`font-medium ${isMobile ? 'w-16' : 'w-24'} p-1 md:p-2`}>City</TableHead>
+                    <TableHead className={`font-medium ${isMobile ? 'w-16' : 'w-20'} p-1 md:p-2`}>Type</TableHead>
+                    <TableHead className={`font-medium ${isMobile ? 'min-w-[120px]' : ''} p-1 md:p-2`}>Branch</TableHead>
+                    <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP1</TableHead>
+                    <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP2</TableHead>
+                    <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP3</TableHead>
+                    <TableHead className={`text-center font-medium ${isMobile ? 'w-16' : 'w-20'} p-1 md:p-2`}>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredResults.map((college, index) => {
+                    const collegeKey = `${college.collegeName}-${college.branch}-${college.category}`;
+                    const isShortlisted = shortlistedColleges.has(collegeKey);
+                    const isEligible = college.eligible;
+                    
+                    return (
+                      <TableRow 
+                        key={collegeKey}
+                        className={`
+                          ${isMobile ? 'text-xs' : 'text-sm'} hover:bg-gray-50 
+                          ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}
+                          ${isEligible ? 'border-l-4 border-l-green-500 bg-green-50/30' : ''}
+                        `}
+                      >
+                        <TableCell className="py-1 px-1 md:px-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'} p-0`}
+                            onClick={() => toggleShortlist(collegeKey)}
+                          >
+                            <Heart 
+                              className={`${isMobile ? 'h-2 w-2' : 'h-3 w-3'} ${
+                                isShortlisted ? 'fill-red-500 text-red-500' : 'text-gray-400'
+                              }`} 
+                            />
+                          </Button>
+                        </TableCell>
+                        <TableCell className="py-1 px-1 md:px-2 font-medium">
+                          <div 
+                            className={`${isMobile ? 'text-xs leading-tight' : ''}`}
+                            title={college.collegeName}
+                          >
+                            {college.collegeName}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-1 px-1 md:px-2">
+                          <Badge variant="outline" className={isMobile ? 'text-xs px-1 py-0' : 'text-xs'}>
+                            {college.city}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-1 px-1 md:px-2">
+                          <Badge variant="secondary" className={isMobile ? 'text-xs px-1 py-0' : 'text-xs'}>
+                            {college.collegeType?.includes('Government') ? 'Govt' : 'Private'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-1 px-1 md:px-2">
+                          <div 
+                            className={`${isMobile ? 'text-xs leading-tight' : ''}`}
+                            title={college.branch}
+                          >
+                            {college.branch}
+                          </div>
+                          <div className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>
+                            {college.category}
+                          </div>
+                        </TableCell>
+                        <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
+                          <span className={
+                            college.cap1Cutoff && studentAggregate >= college.cap1Cutoff 
+                              ? 'text-green-600 font-medium' 
+                              : 'text-muted-foreground'
+                          }>
+                            {college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—'}
+                          </span>
+                        </TableCell>
+                        <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
+                          <span className={
+                            college.cap2Cutoff && studentAggregate >= college.cap2Cutoff 
+                              ? 'text-green-600 font-medium' 
+                              : 'text-muted-foreground'
+                          }>
+                            {college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—'}
+                          </span>
+                        </TableCell>
+                        <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
+                          <span className={
+                            college.cap3Cutoff && studentAggregate >= college.cap3Cutoff 
+                              ? 'text-green-600 font-medium' 
+                              : 'text-muted-foreground'
+                          }>
+                            {college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—'}
+                          </span>
+                        </TableCell>
+                        <TableCell className="py-1 px-1 md:px-2 text-center">
+                          {isEligible ? (
+                            <Check className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-green-600 mx-auto`} />
+                          ) : (
+                            <X className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-red-500 mx-auto`} />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
 
         {/* Summary Card */}
         {eligibleCount > 0 && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mt-6 p-3 md:p-4 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <Check className="w-4 h-4 text-green-600" />
+              <div className={`${isMobile ? 'w-6 h-6' : 'w-8 h-8'} bg-green-100 rounded-full flex items-center justify-center`}>
+                <Check className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-green-600`} />
               </div>
               <div>
-                <h3 className="font-medium text-green-800">Excellent! You have {eligibleCount} eligible options</h3>
-                <p className="text-green-700 text-sm">
+                <h3 className={`font-medium text-green-800 ${isMobile ? 'text-sm' : ''}`}>
+                  Excellent! You have {eligibleCount} eligible options
+                </h3>
+                <p className={`text-green-700 ${isMobile ? 'text-xs' : 'text-sm'}`}>
                   Based on your {studentAggregate}% aggregate, you can apply to these colleges with confidence.
                 </p>
               </div>
@@ -405,14 +418,14 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
 
       {/* Shortlist Sidebar */}
       {showShortlist && shortlistedColleges.size > 0 && (
-        <div className="fixed right-4 top-24 w-80 bg-white border rounded-lg shadow-lg p-4 z-20 max-h-96 overflow-y-auto">
+        <div className={`fixed ${isMobile ? 'right-2 top-20 w-72' : 'right-4 top-24 w-80'} bg-white border rounded-lg shadow-lg p-3 md:p-4 z-20 max-h-96 overflow-y-auto`}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium">My Shortlist ({shortlistedColleges.size})</h3>
+            <h3 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>My Shortlist ({shortlistedColleges.size})</h3>
             <Button variant="ghost" size="sm" onClick={() => setShowShortlist(false)}>
-              <X className="w-4 h-4" />
+              <X className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
             </Button>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className={`space-y-2 ${isMobile ? 'text-xs' : 'text-sm'}`}>
             {Array.from(shortlistedColleges).map(collegeKey => {
               const college = filteredResults.find(c => 
                 `${c.collegeName}-${c.branch}-${c.category}` === collegeKey
@@ -421,8 +434,10 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
               
               return (
                 <div key={collegeKey} className="p-2 bg-gray-50 rounded border-l-2 border-l-blue-500">
-                  <div className="font-medium truncate">{college.collegeName}</div>
-                  <div className="text-xs text-muted-foreground">{college.branch} • {college.city}</div>
+                  <div className={`font-medium ${isMobile ? 'text-xs' : ''}`}>{college.collegeName}</div>
+                  <div className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>
+                    {college.branch} • {college.city}
+                  </div>
                 </div>
               );
             })}
@@ -434,9 +449,9 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
       {showGoToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 w-12 h-12 bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-20"
+          className={`fixed ${isMobile ? 'bottom-4 right-4 w-10 h-10' : 'bottom-6 right-6 w-12 h-12'} bg-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-20`}
         >
-          <ChevronUp className="w-5 h-5" />
+          <ChevronUp className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
         </button>
       )}
     </div>
