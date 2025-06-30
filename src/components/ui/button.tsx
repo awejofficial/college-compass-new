@@ -6,16 +6,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-blue-500 text-white hover:bg-blue-600 shadow-sm hover:shadow-md",
-        destructive: "bg-red-500 text-white hover:bg-red-600 shadow-sm hover:shadow-md",
-        outline: "border border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-300 text-slate-700",
-        secondary: "bg-slate-100 text-slate-700 hover:bg-slate-200",
-        ghost: "hover:bg-slate-100 hover:text-slate-900 text-slate-700",
-        link: "text-blue-500 underline-offset-4 hover:underline hover:text-blue-600",
+        default: "text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 focus-visible:ring-red-500",
+        destructive: "text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 focus-visible:ring-red-500",
+        outline: "border bg-white hover:shadow-sm hover:-translate-y-0.5 focus-visible:ring-red-500",
+        secondary: "text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 focus-visible:ring-teal-500",
+        ghost: "hover:shadow-sm hover:-translate-y-0.5 focus-visible:ring-red-500",
+        link: "underline-offset-4 hover:underline focus-visible:ring-red-500",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -40,9 +40,30 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    
+    // Apply premium colors based on variant
+    const getVariantStyles = () => {
+      switch (variant) {
+        case 'default':
+          return 'bg-premium-primary hover:bg-premium-primary/90'
+        case 'destructive':
+          return 'bg-premium-primary hover:bg-premium-primary/90'
+        case 'outline':
+          return 'border-premium-secondary text-premium-deep hover:bg-premium-secondary/10 hover:border-premium-secondary'
+        case 'secondary':
+          return 'bg-premium-secondary hover:bg-premium-secondary/90'
+        case 'ghost':
+          return 'text-premium-deep hover:bg-premium-secondary/10 hover:text-premium-deep'
+        case 'link':
+          return 'text-premium-primary hover:text-premium-primary/80'
+        default:
+          return 'bg-premium-primary hover:bg-premium-primary/90'
+      }
+    }
+    
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size }), getVariantStyles(), className)}
         ref={ref}
         {...props}
       />

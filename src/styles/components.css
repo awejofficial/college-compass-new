@@ -1,63 +1,102 @@
 
-/* Blue Component Styles */
+/* Premium Component Styles */
 
 @layer utilities {
-  /* Blue card styles */
+  /* Premium card styles */
   .minimal-card {
     @apply bg-card border border-border rounded-lg p-6 shadow-sm text-card-foreground;
     transition: all 0.2s ease;
+    border-color: hsl(var(--premium-secondary) / 0.3);
   }
 
   .minimal-card:hover {
-    @apply border-primary/30 shadow-md;
+    @apply shadow-md;
+    border-color: hsl(var(--premium-secondary) / 0.6);
+    transform: translateY(-1px);
   }
 
-  /* Blue button styles */
+  /* Premium button styles */
   .btn-nvidia {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 shadow-sm hover:shadow-md;
+    background-color: hsl(var(--premium-primary));
+    color: white;
+    @apply px-6 py-3 rounded-lg font-medium shadow-sm hover:shadow-md;
     transition: all 0.2s ease;
   }
 
-  /* Blue secondary button */
+  .btn-nvidia:hover {
+    background-color: hsl(var(--premium-primary) / 0.9);
+    transform: translateY(-1px);
+  }
+
+  /* Premium secondary button */
   .btn-minimal {
-    @apply bg-card border border-border text-card-foreground px-6 py-3 rounded-lg font-medium hover:bg-accent hover:border-primary/30;
+    @apply bg-card border text-card-foreground px-6 py-3 rounded-lg font-medium;
+    border-color: hsl(var(--premium-secondary) / 0.5);
     transition: all 0.2s ease;
   }
 
-  /* Blue input styles */
+  .btn-minimal:hover {
+    background-color: hsl(var(--premium-secondary) / 0.1);
+    border-color: hsl(var(--premium-secondary));
+  }
+
+  /* Premium input styles */
   .input-minimal {
-    @apply bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground;
+    @apply bg-input border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground;
+    border-color: hsl(var(--premium-secondary) / 0.3);
     transition: all 0.2s ease;
   }
 
   .input-minimal:focus {
-    @apply outline-none ring-2 ring-primary border-primary bg-input;
+    @apply outline-none ring-2 bg-input;
+    border-color: hsl(var(--premium-primary));
+    ring-color: hsl(var(--premium-primary) / 0.3);
   }
 
-  /* Blue card professional styles */
+  /* Premium card professional styles */
   .card-professional {
-    @apply bg-card text-card-foreground rounded-lg border border-border p-6 hover:border-primary/30 shadow-sm hover:shadow-md;
+    @apply bg-card text-card-foreground rounded-lg p-6 shadow-sm;
+    border: 1px solid hsl(var(--premium-secondary) / 0.2);
     transition: all 0.2s ease;
   }
 
-  /* Blue hero section */
-  .hero-section {
-    @apply bg-gradient-to-br from-background to-accent/30;
+  .card-professional:hover {
+    @apply shadow-md;
+    border-color: hsl(var(--premium-secondary) / 0.4);
+    transform: translateY(-2px);
   }
 
-  /* Blue metal card styles */
+  /* Premium hero section */
+  .hero-section {
+    background: linear-gradient(135deg, hsl(var(--premium-light)) 0%, hsl(var(--premium-secondary) / 0.1) 100%);
+  }
+
+  /* Premium metal card styles */
   .metal-card {
-    @apply bg-card border border-border rounded-lg p-6 shadow-sm text-card-foreground;
+    @apply bg-card rounded-lg p-6 shadow-sm text-card-foreground;
+    border: 1px solid hsl(var(--premium-secondary) / 0.3);
     transition: all 0.2s ease;
   }
 
   .metal-button {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md;
+    background-color: hsl(var(--premium-primary));
+    color: white;
+    @apply shadow-sm hover:shadow-md;
     transition: all 0.2s ease;
   }
 
+  .metal-button:hover {
+    background-color: hsl(var(--premium-primary) / 0.9);
+  }
+
   .metal-button-outline {
-    @apply bg-card border border-border text-card-foreground hover:bg-accent hover:border-primary/30;
+    @apply bg-card text-card-foreground;
+    border: 1px solid hsl(var(--premium-secondary) / 0.5);
     transition: all 0.2s ease;
+  }
+
+  .metal-button-outline:hover {
+    background-color: hsl(var(--premium-secondary) / 0.1);
+    border-color: hsl(var(--premium-secondary));
   }
 }
