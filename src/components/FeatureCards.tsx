@@ -37,13 +37,13 @@ const features = [
 
 export const FeatureCards: React.FC = () => {
   return (
-    <section className="py-20 bg-premium-light">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl font-bold text-premium-deep mb-4">
+          <h2 className="text-4xl font-bold text-black mb-4">
             🎯 What Makes FindMyClg Different?
           </h2>
-          <p className="text-xl text-premium-deep/80 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             A student-first platform designed specifically for diploma students pursuing DSE admissions in Maharashtra
           </p>
         </div>
@@ -54,18 +54,18 @@ export const FeatureCards: React.FC = () => {
             return (
               <div
                 key={feature.title}
-                className="card-professional group animate-scale-in hover-lift"
+                className="card-professional group animate-scale-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="flex items-center justify-center w-14 h-14 bg-premium-secondary/10 border border-premium-secondary/20 rounded-xl mb-6 group-hover:bg-premium-secondary/20 transition-all duration-200">
-                  <Icon className="h-7 w-7 text-premium-secondary" />
+                <div className="flex items-center justify-center w-14 h-14 bg-white border border-gray-200 rounded-xl mb-6 group-hover:border-black transition-all duration-200">
+                  <Icon className="h-7 w-7 text-black" />
                 </div>
                 
-                <h3 className="text-xl font-semibold text-premium-deep mb-3">
+                <h3 className="text-xl font-semibold text-black mb-3">
                   {feature.title}
                 </h3>
                 
-                <p className="text-premium-deep/70 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

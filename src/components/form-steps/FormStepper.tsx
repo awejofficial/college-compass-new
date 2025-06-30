@@ -20,13 +20,13 @@ export const FormStepper: React.FC<FormStepperProps> = ({
   onSubmit
 }) => {
   return (
-    <div className="bg-white border border-premium-secondary/20 rounded-lg p-6 mt-6 shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-lg p-6 mt-6 shadow-sm">
       <div className="flex justify-between items-center">
         {currentStep > 1 ? (
           <Button 
             variant="outline" 
             onClick={onPrev}
-            className="border-premium-secondary/50 hover:border-premium-secondary hover:bg-premium-secondary/10"
+            className="border-slate-300 hover:border-blue-300 hover:bg-slate-50"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Previous
@@ -42,10 +42,10 @@ export const FormStepper: React.FC<FormStepperProps> = ({
                 key={step}
                 className={`w-2 h-2 rounded-full transition-all duration-200 ${
                   step === currentStep
-                    ? 'bg-premium-primary'
+                    ? 'bg-blue-500'
                     : step < currentStep
-                    ? 'bg-premium-primary'
-                    : 'bg-premium-secondary/40'
+                    ? 'bg-blue-500'
+                    : 'bg-slate-300'
                 }`}
               />
             ))}
@@ -55,7 +55,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({
         {currentStep < 3 ? (
           <Button 
             onClick={onNext}
-            className="bg-premium-primary hover:bg-premium-primary/90"
+            className="bg-blue-500 hover:bg-blue-600"
           >
             Next
             <ChevronRight className="w-4 h-4 ml-2" />
@@ -64,7 +64,7 @@ export const FormStepper: React.FC<FormStepperProps> = ({
           <Button 
             onClick={onSubmit} 
             disabled={isAnalyzing}
-            className="bg-premium-primary hover:bg-premium-primary/90 disabled:opacity-50"
+            className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50"
           >
             {isAnalyzing ? (
               <>

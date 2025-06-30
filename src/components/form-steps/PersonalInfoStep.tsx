@@ -14,23 +14,23 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   onFullNameChange
 }) => {
   return (
-    <Card className="bg-card border-premium-secondary/30 text-card-foreground hover-lift">
+    <Card className="bg-card border-border text-card-foreground">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-premium-deep">Personal Information</CardTitle>
-        <CardDescription className="text-premium-deep/70">
+        <CardTitle className="text-2xl text-card-foreground">Personal Information</CardTitle>
+        <CardDescription className="text-muted-foreground">
           Tell us about yourself for personalized college recommendations.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="grid gap-2">
-            <Label htmlFor="name" className="text-premium-deep">Full Name</Label>
+            <Label htmlFor="name" className="text-card-foreground">Full Name</Label>
             <Input
               id="name"
               placeholder="Enter your full name"
               value={fullName}
               onChange={(e) => onFullNameChange(e.target.value)}
-              className="bg-input border-premium-secondary/30 text-premium-deep focus:border-premium-primary focus:ring-premium-primary/30"
+              className="bg-input border-border text-foreground focus:border-primary focus:ring-primary"
             />
           </div>
         </div>
