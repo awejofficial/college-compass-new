@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Heart, Check, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Check, X } from "lucide-react";
 import { CollegeMatch } from "./FormDataTypes";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -23,92 +22,92 @@ export const ResultsTableRow: React.FC<ResultsTableRowProps> = ({
   onToggleShortlist
 }) => {
   const isMobile = useIsMobile();
-  const collegeKey = `${college.collegeName}-${college.branch}-${college.category}`;
-  const isEligible = college.eligible;
-
+  
   return (
     <TableRow 
       className={`
-        ${isMobile ? 'text-xs' : 'text-sm'} hover:bg-gray-50 
-        ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}
-        ${isEligible ? 'border-l-4 border-l-green-500 bg-green-50/30' : ''}
+        ${college.eligible ? 'bg-green-50 hover:bg-green-100' : 'hover:bg-gray-50'}
+        ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+        transition-colors duration-150
       `}
     >
-      <TableCell className="py-1 px-1 md:px-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'} p-0`}
-          onClick={() => onToggleShortlist(collegeKey)}
-        >
-          <Heart 
-            className={`${isMobile ? 'h-2 w-2' : 'h-3 w-3'} ${
-              isShortlisted ? 'fill-red-500 text-red-500' : 'text-gray-400'
-            }`} 
-          />
-        </Button>
-      </TableCell>
-      <TableCell className="py-1 px-1 md:px-2 font-medium">
-        <div 
-          className={`${isMobile ? 'text-xs leading-tight' : ''}`}
-          title={college.collegeName}
-        >
-          {college.collegeName}
+      <TableCell className={`${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'} font-medium`}>
+        <div className="max-w-full">
+          <div className="font-medium text-foreground leading-tight">
+            {college.collegeName}
+          </div>
         </div>
       </TableCell>
-      <TableCell className="py-1 px-1 md:px-2">
-        <Badge variant="outline" className={isMobile ? 'text-xs px-1 py-0' : 'text-xs'}>
-          {college.city}
+      
+      <TableCell className={`${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        {college.city}
+      </TableCell>
+      
+      <TableCell className={`${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        <Badge variant="outline" className={`${isMobile ? 'text-xs px-1 py-0' : 'text-xs'}`}>
+          {college.collegeType}
         </Badge>
       </TableCell>
-      <TableCell className="py-1 px-1 md:px-2">
-        <Badge variant="secondary" className={isMobile ? 'text-xs px-1 py-0' : 'text-xs'}>
-          {college.collegeType?.includes('Government') ? 'Govt' : 'Private'}
-        </Badge>
-      </TableCell>
-      <TableCell className="py-1 px-1 md:px-2">
-        <div 
-          className={`${isMobile ? 'text-xs leading-tight' : ''}`}
-          title={college.branch}
-        >
-          {college.branch}
+      
+      <TableCell className={`${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        <div className="max-w-full">
+          <span className="text-foreground leading-tight">
+            {college.branch}
+          </span>
         </div>
-        <div className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>
+      </TableCell>
+
+      <TableCell className={`${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        <Badge variant="secondary" className={`${isMobile ? 'text-xs px-1 py-0' : 'text-xs'}`}>
           {college.category}
-        </div>
+        </Badge>
       </TableCell>
-      <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
-        <span className={
-          college.cap1Cutoff && studentAggregate >= college.cap1Cutoff 
-            ? 'text-green-600 font-medium' 
-            : 'text-muted-foreground'
-        }>
-          {college.cap1Cutoff ? `${college.cap1Cutoff}%` : '—'}
-        </span>
-      </TableCell>
-      <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
-        <span className={
-          college.cap2Cutoff && studentAggregate >= college.cap2Cutoff 
-            ? 'text-green-600 font-medium' 
-            : 'text-muted-foreground'
-        }>
-          {college.cap2Cutoff ? `${college.cap2Cutoff}%` : '—'}
-        </span>
-      </TableCell>
-      <TableCell className={`py-1 px-1 md:px-2 text-center ${isMobile ? 'text-xs' : 'text-xs'}`}>
-        <span className={
-          college.cap3Cutoff && studentAggregate >= college.cap3Cutoff 
-            ? 'text-green-600 font-medium' 
-            : 'text-muted-foreground'
-        }>
-          {college.cap3Cutoff ? `${college.cap3Cutoff}%` : '—'}
-        </span>
-      </TableCell>
-      <TableCell className="py-1 px-1 md:px-2 text-center">
-        {isEligible ? (
-          <Check className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-green-600 mx-auto`} />
+      
+      <TableCell className={`text-center ${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        {college.cap1Cutoff ? (
+          <span className={`font-medium ${
+            college.cap1Cutoff <= studentAggregate ? 'text-green-600' : 'text-gray-600'
+          }`}>
+            {college.cap1Cutoff}%
+          </span>
         ) : (
-          <X className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} text-red-500 mx-auto`} />
+          <span className="text-gray-400">—</span>
+        )}
+      </TableCell>
+      
+      <TableCell className={`text-center ${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        {college.cap2Cutoff ? (
+          <span className={`font-medium ${
+            college.cap2Cutoff <= studentAggregate ? 'text-green-600' : 'text-gray-600'
+          }`}>
+            {college.cap2Cutoff}%
+          </span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        )}
+      </TableCell>
+      
+      <TableCell className={`text-center ${isMobile ? 'p-1 text-xs' : 'p-2 text-sm'}`}>
+        {college.cap3Cutoff ? (
+          <span className={`font-medium ${
+            college.cap3Cutoff <= studentAggregate ? 'text-green-600' : 'text-gray-600'
+          }`}>
+            {college.cap3Cutoff}%
+          </span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        )}
+      </TableCell>
+      
+      <TableCell className={`text-center ${isMobile ? 'p-1' : 'p-2'}`}>
+        {college.eligible ? (
+          <div className="flex items-center justify-center">
+            <Check className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-green-600`} />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center">
+            <X className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-red-500`} />
+          </div>
         )}
       </TableCell>
     </TableRow>

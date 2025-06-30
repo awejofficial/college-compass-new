@@ -5,7 +5,6 @@ import { CollegeMatch } from "./FormDataTypes";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FilterBar } from "./FilterBar";
 import { ResultsTableRow } from "./ResultsTableRow";
-import { ShortlistSidebar } from "./ShortlistSidebar";
 import { GoToTopButton } from "./GoToTopButton";
 import { SummaryCard } from "./SummaryCard";
 import { exportToPDF } from "./PDFExporter";
@@ -20,8 +19,9 @@ interface TNEAStyleResultsTableProps {
 interface FilterState {
   cities: string[];
   branches: string[];
-  capRounds: string[];
+  categories: string[];
   eligibleOnly: boolean;
+  searchTerm: string;
 }
 
 export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({ 
@@ -33,12 +33,11 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
   const [filters, setFilters] = useState<FilterState>({
     cities: [],
     branches: [],
-    capRounds: [],
-    eligibleOnly: false
+    categories: [],
+    eligibleOnly: false,
+    searchTerm: ''
   });
-  const [shortlistedColleges, setShortlistedColleges] = useState<Set<string>>(new Set());
   const [showGoToTop, setShowGoToTop] = useState(false);
-  const [showShortlist, setShowShortlist] = useState(false);
   const isMobile = useIsMobile();
 
   // Scroll detection for go-to-top button
@@ -53,6 +52,7 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
   // Get unique filter options
   const uniqueCities = [...new Set(results.map(r => r.city))].sort();
   const uniqueBranches = [...new Set(results.map(r => r.branch))].sort();
+  const uniqueCategories = [...new Set(results.map(r => r.category))].sort();
 
   // Filter and sort results
   const filteredResults = results
@@ -60,6 +60,15 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
       if (filters.eligibleOnly && !college.eligible) return false;
       if (filters.cities.length > 0 && !filters.cities.includes(college.city)) return false;
       if (filters.branches.length > 0 && !filters.branches.includes(college.branch)) return false;
+      if (filters.categories.length > 0 && !filters.categories.includes(college.category)) return false;
+      if (filters.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase();
+        const matchesSearch = 
+          college.collegeName.toLowerCase().includes(searchLower) ||
+          college.branch.toLowerCase().includes(searchLower) ||
+          college.city.toLowerCase().includes(searchLower);
+        if (!matchesSearch) return false;
+      }
       return true;
     })
     .sort((a, b) => {
@@ -82,29 +91,21 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
         return { ...prev, [type]: value as boolean };
       }
       
-      const currentArray = prev[type as keyof Omit<FilterState, 'eligibleOnly'>] as string[];
+      const currentArray = prev[type as keyof Omit<FilterState, 'eligibleOnly' | 'searchTerm'>] as string[];
       const newArray = currentArray.includes(value as string)
-        ? currentArray.filter(item => item !== value)
-        : [...currentArray, value as string];
+        ? [] // Clear the filter if it's already selected
+        : [value as string]; // Set single value
       
       return { ...prev, [type]: newArray };
     });
   };
 
-  const clearFilters = () => {
-    setFilters({ cities: [], branches: [], capRounds: [], eligibleOnly: false });
+  const handleSearchChange = (searchTerm: string) => {
+    setFilters(prev => ({ ...prev, searchTerm }));
   };
 
-  const toggleShortlist = (collegeKey: string) => {
-    setShortlistedColleges(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(collegeKey)) {
-        newSet.delete(collegeKey);
-      } else {
-        newSet.add(collegeKey);
-      }
-      return newSet;
-    });
+  const clearFilters = () => {
+    setFilters({ cities: [], branches: [], categories: [], eligibleOnly: false, searchTerm: '' });
   };
 
   const scrollToTop = () => {
@@ -123,15 +124,15 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
         studentName={studentName}
         filteredResultsLength={filteredResults.length}
         eligibleCount={eligibleCount}
-        shortlistedCollegesSize={shortlistedColleges.size}
         filters={filters}
         uniqueCities={uniqueCities}
         uniqueBranches={uniqueBranches}
+        uniqueCategories={uniqueCategories}
         onRefillForm={onRefillForm}
         onExportToPDF={handleExportToPDF}
-        onToggleShortlist={() => setShowShortlist(!showShortlist)}
         onToggleFilter={toggleFilter}
         onClearFilters={clearFilters}
+        onSearchChange={handleSearchChange}
       />
 
       {/* Results Table */}
@@ -143,11 +144,11 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
               <Table>
                 <TableHeader className="bg-gray-50 sticky top-0">
                   <TableRow>
-                    <TableHead className="w-8 p-1 md:p-2"></TableHead>
                     <TableHead className={`font-medium ${isMobile ? 'min-w-[200px]' : ''} p-1 md:p-2`}>College</TableHead>
                     <TableHead className={`font-medium ${isMobile ? 'w-16' : 'w-24'} p-1 md:p-2`}>City</TableHead>
                     <TableHead className={`font-medium ${isMobile ? 'w-16' : 'w-20'} p-1 md:p-2`}>Type</TableHead>
                     <TableHead className={`font-medium ${isMobile ? 'min-w-[120px]' : ''} p-1 md:p-2`}>Branch</TableHead>
+                    <TableHead className={`font-medium ${isMobile ? 'w-16' : 'w-20'} p-1 md:p-2`}>Category</TableHead>
                     <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP1</TableHead>
                     <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP2</TableHead>
                     <TableHead className={`text-center font-medium ${isMobile ? 'w-12' : 'w-16'} p-1 md:p-2`}>CAP3</TableHead>
@@ -157,7 +158,6 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
                 <TableBody>
                   {filteredResults.map((college, index) => {
                     const collegeKey = `${college.collegeName}-${college.branch}-${college.category}`;
-                    const isShortlisted = shortlistedColleges.has(collegeKey);
                     
                     return (
                       <ResultsTableRow
@@ -165,8 +165,8 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
                         college={college}
                         index={index}
                         studentAggregate={studentAggregate}
-                        isShortlisted={isShortlisted}
-                        onToggleShortlist={toggleShortlist}
+                        isShortlisted={false}
+                        onToggleShortlist={() => {}} // Disabled
                       />
                     );
                   })}
@@ -178,14 +178,6 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
 
         <SummaryCard eligibleCount={eligibleCount} studentAggregate={studentAggregate} />
       </div>
-
-      {showShortlist && (
-        <ShortlistSidebar
-          shortlistedColleges={shortlistedColleges}
-          filteredResults={filteredResults}
-          onClose={() => setShowShortlist(false)}
-        />
-      )}
 
       <GoToTopButton show={showGoToTop} onClick={scrollToTop} />
     </div>
