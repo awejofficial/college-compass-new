@@ -105,6 +105,11 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
         return { ...prev, [type]: value as boolean };
       }
       
+      // Handle "all" value to clear filters
+      if (value === 'all' || value === '') {
+        return { ...prev, [type]: [] };
+      }
+      
       const currentArray = prev[type as keyof Omit<FilterState, 'eligibleOnly' | 'searchTerm'>] as string[];
       const newArray = currentArray.includes(value as string)
         ? [] // Clear the filter if it's already selected
