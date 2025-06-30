@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
           
           <div className="flex items-center bg-card border border-border rounded-lg p-2">
             <a
-              href="https://instagram.com/awej04"
+              href="https://instagram.com/awej04/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-accent"
@@ -37,7 +37,7 @@ export const Footer: React.FC = () => {
             </a>
             
             <a
-              href="https://linkedin.com/in/awej-pathan"
+              href="https://www.linkedin.com/in/awejpathan/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-accent"
