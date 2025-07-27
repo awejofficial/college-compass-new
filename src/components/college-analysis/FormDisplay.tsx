@@ -51,23 +51,21 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-          <SinglePageForm
-            formData={formData}
-            availableCategories={availableCategories}
-            isAnalyzing={isAnalyzing}
-            isGuest={isGuest}
-            onFormDataChange={onFormDataChange}
-            onBranchChange={onBranchChange}
-            onCollegeTypeChange={onCollegeTypeChange}
-            onCityChange={onCityChange}
-            onGuestAccess={onGuestAccess}
-            onSubmit={onSubmit}
-          />
-        </div>
-        
-        {/* Rules and Information Section */}
-        <RulesInfoSection />
-      </div>
+      <SinglePageForm
+        formData={formData}
+        availableCategories={availableCategories}
+        isAnalyzing={isAnalyzing}
+        isGuest={isGuest}
+        onFormDataChange={onFormDataChange}
+        onBranchChange={onBranchChange}
+        onCollegeTypeChange={onCollegeTypeChange}
+        onCityChange={onCityChange}
+        onGuestAccess={onGuestAccess}
+        onSubmit={onSubmit}
+      />
+      
+      {/* Rules and Information Section */}
+      <RulesInfoSection />
       <Footer />
     </div>
   );
