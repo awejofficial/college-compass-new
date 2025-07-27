@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { GraduationCap } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -61,7 +62,6 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
               </h1>
               <p className="text-muted-foreground">Find eligible DSE colleges based on real CAP cutoff data</p>
             </div>
-           
           </div>
 
           <SinglePageForm
@@ -77,7 +77,7 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
             onSubmit={onSubmit}
           />
         </div>
-
+        
         {/* Rules and Information Section */}
         <RulesInfoSection />
       </div>
