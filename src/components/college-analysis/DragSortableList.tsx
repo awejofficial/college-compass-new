@@ -61,10 +61,12 @@ export const DragSortableList: React.FC<DragSortableListProps> = ({
                     >
                       <GripVertical className="h-4 w-4" />
                     </div>
-                    <Badge variant="secondary" className="flex-1 justify-between px-3 py-1">
-                      <span className="text-gray-700">{item}</span>
-                      <span className="text-xs text-gray-500 ml-2">#{index + 1}</span>
-                    </Badge>
+                     <div className="flex-1 px-3 py-2">
+                       <div className="text-gray-700 font-medium">{item.split('-')[0]}</div>
+                       <div className="text-xs text-gray-500">
+                         {item.split('-').slice(1).join(' - ')} • Priority #{index + 1}
+                       </div>
+                     </div>
                     <button
                       type="button"
                       onClick={() => onRemove(item)}

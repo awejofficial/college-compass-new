@@ -10,7 +10,8 @@ import { useFilterLogic } from "./FilterLogic";
 import { usePaginationLogic } from "./PaginationLogic";
 import { SmartStrategy } from "./SmartStrategy";
 import { Button } from "@/components/ui/button";
-import { Target } from "lucide-react";
+import { Target, Star } from "lucide-react";
+import { PreferenceList } from "./PreferenceList";
 
 interface TNEAStyleResultsTableProps {
   results: CollegeMatch[];
@@ -27,6 +28,7 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
 }) => {
   const [showGoToTop, setShowGoToTop] = useState(false);
   const [showSmartStrategy, setShowSmartStrategy] = useState(false);
+  const [showPreferenceList, setShowPreferenceList] = useState(false);
   const resultsPerPage = 35; // Updated to 35 results per page
 
   // Use the filter logic hook
@@ -90,18 +92,27 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
         <div className="bg-gradient-to-r from-[#002C3E] to-[#78BCC4] rounded-lg p-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold mb-2">🎯 Get Personalized College Strategy</h3>
+              <h3 className="text-lg font-bold mb-2">🎯 Smart Tools for College Selection</h3>
               <p className="text-white/90 text-sm">
-                Discover the best colleges categorized as Best Fit, Safe Options, and Dream Colleges based on your aggregate score.
+                Use our smart strategy tool and create your preference list for informed college choices.
               </p>
             </div>
-            <Button 
-              onClick={() => setShowSmartStrategy(true)}
-              className="bg-white text-[#002C3E] hover:bg-white/90 font-semibold px-6 py-2"
-            >
-              <Target className="w-4 h-4 mr-2" />
-              Use Smart Strategy
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => setShowPreferenceList(true)}
+                className="bg-white text-[#002C3E] hover:bg-white/90 font-semibold px-6 py-2"
+              >
+                <Star className="w-4 h-4 mr-2" />
+                My Preference List
+              </Button>
+              <Button 
+                onClick={() => setShowSmartStrategy(true)}
+                className="bg-white text-[#002C3E] hover:bg-white/90 font-semibold px-6 py-2"
+              >
+                <Target className="w-4 h-4 mr-2" />
+                Smart Strategy
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -147,6 +158,16 @@ export const TNEAStyleResultsTable: React.FC<TNEAStyleResultsTableProps> = ({
           studentName={studentName}
           studentAggregate={studentAggregate}
           onClose={() => setShowSmartStrategy(false)}
+        />
+      )}
+      
+      {/* Preference List Modal */}
+      {showPreferenceList && (
+        <PreferenceList
+          results={results}
+          studentName={studentName}
+          isVisible={showPreferenceList}
+          onClose={() => setShowPreferenceList(false)}
         />
       )}
     </div>
