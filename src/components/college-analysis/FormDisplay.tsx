@@ -55,11 +55,13 @@ export const FormDisplay: React.FC<FormDisplayProps> = ({
       <div className="flex-1 p-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-              <GraduationCap className="h-8 w-8 text-primary" />
-              FindMyClg - DSE College Finder 2024
-            </h1>
-            <p className="text-muted-foreground">Find eligible DSE colleges based on real CAP cutoff data</p>
+            <div className="bg-card border border-border rounded-lg p-6 shadow-sm">
+              <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
+                <GraduationCap className="h-8 w-8 text-primary" />
+                FindMyClg - DSE College Finder 2024
+              </h1>
+              <p className="text-muted-foreground">Find eligible DSE colleges based on real CAP cutoff data</p>
+            </div>
           </div>
 
           <SinglePageForm
